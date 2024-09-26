@@ -1,7 +1,7 @@
 name: quds_formula_parser
 description: A Fast formula parser and evaulator, written by pure dart.
 version: 0.0.1
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/MohammedAsaadAsaad/quds_formula_parser
 
 environment:
   sdk: ^3.4.4
