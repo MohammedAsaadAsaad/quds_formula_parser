@@ -6,6 +6,8 @@ void main() {
 
   _evaluatingWithVariables();
 
+  _completePossibleMissingTerms();
+
   _parseAndEvaluateWithCustomProvider();
 
   _changeVariableValueByFormula();
@@ -114,7 +116,7 @@ void _parseAndEvaluateWithCustomProvider() {
 
   // Prepare the parser
   var parser = FormulaParser(provider: provider);
-  provider.insertVariable(Variable(symbol: 'x', value: 0));
+  provider.setVariableValue('x', 0);
 
   var formula = parser.parse('randomize(x)');
 
@@ -137,4 +139,15 @@ class _CustomFunction extends FormulaFunction {
   @override
   bool checkParameters(List<ValueWrapper> terms) =>
       terms.length == 1 && terms.first.isRealNumber;
+}
+
+void _completePossibleMissingTerms() {
+  var provider = FormulaProvider.defaultInstance;
+  provider.setVariableValue('x', 0);
+  FormulaParser parser =
+      FormulaParser(provider: FormulaProvider.defaultInstance);
+  String formulaStr = 'x(-x + 5)';
+  var formula = parser.parse(formulaStr);
+  var supporter = FormulaInfixToPostfixConvertor(formula: formula);
+  print('${formula.toString()} = ${supporter.evaluate()}');
 }

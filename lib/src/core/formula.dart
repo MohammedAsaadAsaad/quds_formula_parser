@@ -22,4 +22,15 @@ class Formula {
 
   /// Checks if the formula has a parsing error.
   bool get hasParsingError => errorParsingPosition != null;
+
+  String get formulaString {
+    StringBuffer buffer = StringBuffer();
+    for (var t in terms) {
+      buffer.write(t.stringToView);
+    }
+    return buffer.toString();
+  }
+
+  @override
+  String toString() => formulaString.toString();
 }

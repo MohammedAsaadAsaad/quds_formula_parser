@@ -54,7 +54,9 @@ class FormulaTermsCompleter extends FormulaTermsSupporter {
           // Add a default value of 0 if the previous term is a left bracket
           if (prev.isLeftBracket) {
             formula.terms.insert(i, RealNumberWrapper(0));
-            size++;
+            formula.terms.insert(i, OpeningBracket());
+            formula.terms.insert(i + 4, ClosingBracket());
+            size += 3;
           }
         } else {
           // Insert a default value of 0 at the start if the operator is the first term
