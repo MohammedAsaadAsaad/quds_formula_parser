@@ -19,7 +19,14 @@ abstract class TriangleFunctionSingleParameter
   /// The `calculationMethod` defines the specific trigonometric function to be applied (e.g., `sin`).
   /// The `functionTitle` specifies the title of the function (e.g., 'Sine', 'Cosine').
   TriangleFunctionSingleParameter(
-      {required super.functionNotations, required super.calculationMethod});
+      {required super.functionNotations, required super.calculationMethod})
+      : super(manipulateOutput: (v) {
+          if (v is num && v.abs() < 1e-10) {
+            // If the result is too small, ignore it and return 0.0
+            return 0.0;
+          }
+          return v;
+        });
 
   /// Generates a list of trigonometric functions (sine, cosine, and tangent).
   ///

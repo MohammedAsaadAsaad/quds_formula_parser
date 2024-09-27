@@ -7,7 +7,7 @@ import '../../../quds_formula_parser.dart';
 abstract class FormulaFunction<R> extends FormulaTerm {
   /// Constructs a `FormulaFunction` with the given notations.
   /// The `functionNotations` are the names or symbols used to represent the function.
-  FormulaFunction({required this.functionNotations});
+  FormulaFunction({required this.functionNotations, this.manipulateOutput});
 
   /// Returns the title of the function, typically used to display the name or description.
   String get title => functionNotations.first;
@@ -24,6 +24,19 @@ abstract class FormulaFunction<R> extends FormulaTerm {
   /// This method performs the calculation based on the given parameters
   /// and returns a result of type `R`.
   R calculate(List<ValueWrapper> parameters);
+
+  final R Function(R value)? manipulateOutput;
+
+  /// This method performs the calculation based on the given parameters
+  /// with manipulation of the result
+  /// and returns a result of type `R`.
+  R calculateAndManipulate(List<ValueWrapper> parameters) {
+    R result = calculate(parameters);
+    if (manipulateOutput != null) {
+      result = manipulateOutput!(result);
+    }
+    return result;
+  }
 
   /// Returns the primary string representation of the function, which is
   /// the first notation in the `functionNotations` list.

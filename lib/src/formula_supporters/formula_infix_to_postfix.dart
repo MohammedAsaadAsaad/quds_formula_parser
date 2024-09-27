@@ -138,8 +138,9 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
         var fun = t as FormulaFunction;
         var params = args.reversed.map((e) => e as ValueWrapper).toList();
 
-        var result =
-            fun.checkParameters(params) ? fun.calculate(params) : NAValue();
+        var result = fun.checkParameters(params)
+            ? fun.calculateAndManipulate(params)
+            : NAValue();
 
         stack.addFirst(toFormulaValue(result));
         functionFound = true;

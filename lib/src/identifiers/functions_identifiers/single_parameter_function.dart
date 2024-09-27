@@ -6,8 +6,7 @@ import '../../../../quds_formula_parser.dart';
 /// an output. The input and output types are defined by the generic parameters [O] (output) and [P] (parameter).
 ///
 /// Functions that extend this class must provide a calculation method and function title.
-abstract class SingleParameterFunction<O, P>
-    extends FormulaFunction<FormulaValue> {
+abstract class SingleParameterFunction<O, P> extends FormulaFunction<dynamic> {
   /// The method to calculate the result of the function using a single input.
   final O Function(P arg) calculationMethod;
 
@@ -15,17 +14,17 @@ abstract class SingleParameterFunction<O, P>
   ///
   /// The `calculationMethod` defines how the function operates on the input parameter.
   /// The `functionTitle` specifies the name of the function.
-  SingleParameterFunction({
-    required super.functionNotations,
-    required this.calculationMethod,
-  });
+  SingleParameterFunction(
+      {required super.functionNotations,
+      required this.calculationMethod,
+      super.manipulateOutput});
 
   /// Calculates the result of applying the function to the given parameter.
   ///
   /// Takes a list of [ValueWrapper] parameters, where the first parameter is expected
   /// to be of type [P]. The result of the function is returned as a [FormulaValue].
   @override
-  FormulaValue calculate(List<ValueWrapper> parameters) {
+  dynamic calculate(List<ValueWrapper> parameters) {
     var result = calculationMethod(parameters.first.value);
     return toFormulaValue(result);
   }

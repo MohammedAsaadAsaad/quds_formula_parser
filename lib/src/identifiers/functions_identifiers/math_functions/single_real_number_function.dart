@@ -13,10 +13,10 @@ abstract class SingleRealNumberFunction
   /// The `functionNotations` define the various names for the function (e.g., 'Sin', 'Cos').
   /// The `calculationMethod` defines the specific mathematical function to be applied (e.g., `sin`, `cos`).
   /// The `functionTitle` specifies the title of the function (e.g., 'Sine', 'Cosine').
-  SingleRealNumberFunction({
-    required super.functionNotations,
-    required super.calculationMethod,
-  });
+  SingleRealNumberFunction(
+      {required super.functionNotations,
+      required super.calculationMethod,
+      super.manipulateOutput});
 
   /// Calculates the result of applying the function to the given parameter.
   ///
@@ -24,8 +24,8 @@ abstract class SingleRealNumberFunction
   /// to be a real number. It applies the specified calculation method (e.g., `sin`, `cos`)
   /// and returns the result as a [RealNumberWrapper].
   @override
-  RealNumberWrapper calculate(List<ValueWrapper> parameters) {
-    return RealNumberWrapper(calculationMethod(parameters.first.value));
+  dynamic calculate(List<ValueWrapper> parameters) {
+    return calculationMethod(parameters.first.value);
   }
 
   /// Checks if the provided parameters are valid for the function.

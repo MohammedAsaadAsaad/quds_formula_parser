@@ -31,6 +31,10 @@ class FormulaParser {
   String? insertConstant(Constant constant) =>
       provider.insertConstant(constant);
 
+  /// Set a value of a variable
+  bool setVariableValue(String symbol, [value]) =>
+      provider.setVariableValue(symbol, value);
+
   set provider(FormulaProvider provider) => _provider = provider;
 
   /// Parses a formula represented as a string and returns a `Formula` object.

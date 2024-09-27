@@ -143,10 +143,8 @@ class _CustomFunction extends FormulaFunction {
 }
 
 void _completePossibleMissingTerms() {
-  var provider = FormulaProvider.defaultInstance;
-  provider.setVariableValue('x', 0);
-  FormulaParser parser =
-      FormulaParser(provider: FormulaProvider.defaultInstance);
+  FormulaParser parser = FormulaParser();
+  parser.setVariableValue('x', 0);
   String formulaStr = 'x(-x + 5)';
   var formula = parser.parse(formulaStr);
   var supporter = FormulaInfixToPostfixConvertor(formula: formula);
