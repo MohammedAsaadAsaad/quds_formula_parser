@@ -18,8 +18,12 @@ class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
   /// A list of available functions to identify from.
   final List<FormulaFunction> functions;
 
+  final FormulaProvider provider;
+
   /// Creates a [FunctionIdentifier] with the provided list of functions.
-  FunctionIdentifier({required this.functions});
+  FunctionIdentifier({required this.provider, required this.functions}) {
+    provider.setFunctionsIdentifier(this);
+  }
 
   /// Parses the input string to match it with a function's notation.
   ///

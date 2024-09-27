@@ -113,8 +113,13 @@ void _parseAndEvaluateWithCustomProvider() {
   provider.identifiers.addAll([
     BracketIdentifier(),
     NamedValuesIdentifier(provider: provider),
-    FunctionIdentifier(functions: [_CustomFunction()])
   ]);
+  provider.registerFunction(
+      notations: ['Randomize', 'Custom.Rnd'],
+      evaluator: (params) {
+        return params.first * Random().nextInt(100);
+      },
+      checkParameters: (params) => params.length == 1 && params.first is num);
 
   // Prepare the parser
   var parser = FormulaParser(provider: provider);
@@ -129,19 +134,19 @@ void _parseAndEvaluateWithCustomProvider() {
   }
 }
 
-class _CustomFunction extends FormulaFunction {
-  _CustomFunction() : super(functionNotations: ['Custom.Rnd', 'Randomize']);
+// class _CustomFunction extends FormulaFunction {
+//   _CustomFunction() : super(functionNotations: ['Custom.Rnd', 'Randomize']);
 
-  @override
-  calculate(List<ValueWrapper> parameters) {
-    num arg = parameters.first.value;
-    return arg * Random().nextInt(100);
-  }
+//   @override
+//   calculate(List<ValueWrapper> parameters) {
+//     num arg = parameters.first.value;
+//     return arg * Random().nextInt(100);
+//   }
 
-  @override
-  bool checkParameters(List<ValueWrapper> terms) =>
-      terms.length == 1 && terms.first.isRealNumber;
-}
+//   @override
+//   bool checkParameters(List<ValueWrapper> terms) =>
+//       terms.length == 1 && terms.first.isRealNumber;
+// }
 
 void _completePossibleMissingTerms() {
   FormulaParser parser = FormulaParser();

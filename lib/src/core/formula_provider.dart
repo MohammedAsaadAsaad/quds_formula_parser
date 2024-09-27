@@ -4,6 +4,22 @@ import '../../quds_formula_parser.dart';
 /// This class acts as a registry for different formula components
 /// and provides functionalities to insert and retrieve named values.
 class FormulaProvider {
+  FunctionIdentifier? _functionIdentifier;
+
+  /// Sets the functions identifier
+  void setFunctionsIdentifier(FunctionIdentifier functionsIdentifier) {
+    _functionIdentifier = functionsIdentifier;
+    if (!identifiers.contains(_functionIdentifier)) {
+      identifiers.add(_functionIdentifier!);
+    }
+  }
+
+  void _ensureFunctionsIdentifierSet() {
+    if (_functionIdentifier == null) {
+      setFunctionsIdentifier(FunctionIdentifier(provider: this, functions: []));
+    }
+  }
+
   /// A list of formula term identifiers that can recognize different formula terms.
   final List<FormulaTermIdentifier> identifiers = [];
 
@@ -36,6 +52,20 @@ class FormulaProvider {
     } else {
       _variables[key]!.value = toFormulaValue(value);
     }
+    return true;
+  }
+
+  /// Register function
+  bool registerFunction(
+      {required List<String> notations,
+      required dynamic Function(Iterable<dynamic> parameters) evaluator,
+      bool Function(Iterable<dynamic> parameters)? checkParameters}) {
+    _ensureFunctionsIdentifierSet();
+    var functionsIdentifier = _functionIdentifier!;
+    functionsIdentifier.functions.add(FormulaFunctionRegister(
+        functionNotations: notations,
+        calculationsMethod: evaluator,
+        parametersCheckerMethod: checkParameters));
     return true;
   }
 
@@ -85,7 +115,8 @@ FormulaProvider _generateDefaultProvider() {
     ..._generateValueIdentifiers(),
     BracketIdentifier(),
     NamedValuesIdentifier(provider: result),
-    FunctionIdentifier(functions: _generateFunctionsIdenfiers(result)),
+    FunctionIdentifier(
+        provider: result, functions: _generateFunctionsIdenfiers(result)),
     OperatorsIdentifiers(),
     CommaIdentifier(),
   ]);

@@ -43,3 +43,23 @@ abstract class FormulaFunction<R> extends FormulaTerm {
   @override
   String get stringToView => functionNotations.first;
 }
+
+class FormulaFunctionRegister extends FormulaFunction {
+  FormulaFunctionRegister(
+      {required super.functionNotations,
+      required this.calculationsMethod,
+      this.parametersCheckerMethod});
+  final Function(Iterable parameters) calculationsMethod;
+  final bool Function(Iterable parameters)? parametersCheckerMethod;
+  @override
+  calculate(List<ValueWrapper> parameters) {
+    return calculationsMethod(parameters.map((e) => e.value));
+  }
+
+  @override
+  bool checkParameters(List<ValueWrapper> terms) {
+    if (parametersCheckerMethod == null) return true;
+
+    return parametersCheckerMethod!(terms.map((e) => e.value));
+  }
+}
