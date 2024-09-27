@@ -111,6 +111,8 @@ List<ValueIdentifier> _generateValueIdentifiers() => [
       AtomIdentifier(),
       StringIdentifier(),
       BooleanIdentifier(),
+      // Numbers
+      FractionIdentifier(),
       ComplexNumberIdentifier(),
       RealNumberIdentifier(),
       Point2dIdentifier(),

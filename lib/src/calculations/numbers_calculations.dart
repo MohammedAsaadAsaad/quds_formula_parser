@@ -88,3 +88,13 @@ extension NumbersCalculations on Iterable<num> {
     return map((e) => pow(e - mean, 2)).average();
   }
 }
+
+/// Helper function to compute GCD (Greatest Common Divisor)
+int gcd(int a, int b) {
+  while (b != 0) {
+    final t = b;
+    b = a % b;
+    a = t;
+  }
+  return a;
+}

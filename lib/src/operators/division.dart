@@ -43,6 +43,12 @@ class DivisionOperator extends Operator {
       result = _performComplices(a, b);
     } else if (a is num && b is ComplexNumber) {
       result = _performNumWithComplex(a, b);
+    } else if (a is Fraction && b is Fraction) {
+      result = _performFractions(a, b);
+    } else if (a is Fraction && b is num) {
+      result = _performFractionWithReal(a, b);
+    } else if (a is num && b is Fraction) {
+      result = _performRealWithFraction(a, b);
     }
 
     return toFormulaValue(result);
@@ -71,6 +77,21 @@ class DivisionOperator extends Operator {
   /// Performs division of a complex number by a numeric value.
   ComplexNumber _performComplexWithNum(ComplexNumber a, num b) {
     return a / b;
+  }
+
+  /// Performs division of two fractions.
+  Fraction _performFractions(Fraction a, Fraction b) {
+    return a / b;
+  }
+
+  /// Performs division of fraction with real number.
+  Fraction _performFractionWithReal(Fraction a, num b) {
+    return a / b;
+  }
+
+  /// Performs division of fraction with real number.
+  Fraction _performRealWithFraction(num a, Fraction b) {
+    return Fraction.fromNum(a) / b;
   }
 
   /// Returns the string representation of the operator, which is `/`.

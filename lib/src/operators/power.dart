@@ -21,6 +21,12 @@ class PowerOperator extends Operator {
     if (a is RealNumberWrapper && b is RealNumberWrapper) {
       return RealNumberWrapper(pow(a.value, b.value));
     }
+    if (a is FractionWrapper && b is RealNumberWrapper) {
+      var v = a.value;
+      var p = b.value;
+      return FractionWrapper(
+          Fraction.fromNum(pow(v.numerator, p) / pow(v.denominator, p)));
+    }
 
     return NAValue();
   }

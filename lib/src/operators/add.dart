@@ -41,6 +41,12 @@ class AddOperator extends Operator {
       result = _performNumWithComplex(a, b);
     } else if (a is Point2D && b is Point2D) {
       result = _perform2dPoints(a, b);
+    } else if (a is Fraction && b is Fraction) {
+      result = _performFractions(a, b);
+    } else if (a is Fraction && b is num) {
+      result = _performFractionWithReal(a, b);
+    } else if (a is num && b is Fraction) {
+      result = _performRealWithFraction(a, b);
     }
 
     return toFormulaValue(result);
@@ -69,6 +75,21 @@ class AddOperator extends Operator {
   /// Performs addition of two 2D points.
   Point2D _perform2dPoints(Point2D a, Point2D b) {
     return a + b;
+  }
+
+  /// Performs addition of two fractions.
+  Fraction _performFractions(Fraction a, Fraction b) {
+    return a + b;
+  }
+
+  /// Performs addition of fraction with real number.
+  Fraction _performFractionWithReal(Fraction a, num b) {
+    return a + b;
+  }
+
+  /// Performs addition of fraction with real number.
+  Fraction _performRealWithFraction(num a, Fraction b) {
+    return b + a;
   }
 
   /// Returns the string representation of the operator, which is `+`.
