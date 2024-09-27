@@ -70,11 +70,11 @@ class FormulaProvider {
     return null;
   }
 
-  /// Singleton instance of the default `FormulaProvider`.
-  static final FormulaProvider _instance = _generateDefaultProvider();
+  // Singleton instance of the default `FormulaProvider`.
+  // static final FormulaProvider _instance = _generateDefaultProvider();
 
   /// Retrieves the default instance of the `FormulaProvider`.
-  static FormulaProvider get defaultInstance => _instance;
+  static FormulaProvider get defaultInstance => _generateDefaultProvider();
 }
 
 /// Generates a default instance of `FormulaProvider` with predefined identifiers and constants.

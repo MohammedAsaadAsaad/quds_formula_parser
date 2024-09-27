@@ -32,8 +32,7 @@ void main() {
 
     test('Setting variable with changing its value, with evaluating the output',
         () {
-      FormulaParser parser =
-          FormulaParser(provider: FormulaProvider.defaultInstance);
+      FormulaParser parser = FormulaParser();
       parser.provider.insertVariable(Variable(symbol: 'x', value: 0));
 
       var formula = parser.parse("Sin(x/2)");

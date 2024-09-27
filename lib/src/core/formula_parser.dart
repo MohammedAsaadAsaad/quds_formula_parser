@@ -5,13 +5,33 @@ import '../../quds_formula_parser.dart';
 /// and breaking them down into their constituent terms.
 class FormulaParser {
   /// Creates an instance of `FormulaParser` with the provided formula provider.
-  FormulaParser({required this.provider});
+  FormulaParser({FormulaProvider? provider}) {
+    _provider = provider;
+  }
 
   factory FormulaParser.defaultParser() =>
       FormulaParser(provider: FormulaProvider.defaultInstance);
 
   /// The `FormulaProvider` instance that contains identifiers for parsing terms.
-  final FormulaProvider provider;
+  FormulaProvider? _provider;
+
+  /// Get the current provider of this parser
+  FormulaProvider get provider {
+    _provider ??= FormulaProvider.defaultInstance;
+    return _provider!;
+  }
+
+  /// Inserts a variable into the provider.
+  /// Returns an error message if the variable's symbol is already used.
+  String? insertVariable(Variable variable) =>
+      provider.insertVariable(variable);
+
+  /// Inserts a constant into the provider.
+  /// Returns an error message if the constant's symbol is already used.
+  String? insertConstant(Constant constant) =>
+      provider.insertConstant(constant);
+
+  set provider(FormulaProvider provider) => _provider = provider;
 
   /// Parses a formula represented as a string and returns a `Formula` object.
   /// This method processes the string and identifies terms, values, and functions.

@@ -208,35 +208,24 @@ Here's an example of parsing and evaluating a simple formula:
   
 
 ```dart
-import  'package:quds_formula_parser/quds_formula_parser.dart';
+import 'package:quds_formula_parser/quds_formula_parser.dart';
 
+dynamic _parseFormulaAndEvaluate(String str) {
+  FormulaParser parser = FormulaParser();
 
-dynamic  _parseFormulaAndEvaluate(String  str) {
+  var formula = parser.parse(str);
 
-FormulaParser  parser  =
+  var supporter = FormulaInfixToPostfixConvertor(formula: formula);
 
-FormulaParser(provider:  FormulaProvider.defaultInstance);
+  var result = supporter.evaluate();
 
-  
+  if (result is ValueWrapper) return result.value;
 
-var  formula  =  parser.parse(str);
-
-var  supporter  =  FormulaInfixToPostfixConvertor(formula:  formula);
-
-var  result  =  supporter.evaluate();
-
-if (result  is  ValueWrapper) return  result.value;
-
-return  result;
-
+  return result;
 }
 
-void  main() {
-
-_evaluateSimpleFormulas();
-
-  
-
+void main() {
+  _evaluateSimpleFormulas();
 }
 
 ```
@@ -252,57 +241,41 @@ You can also define custom variable and use it with custom value in your formula
   
 
 ```dart
+import 'package:quds_formula_parser/quds_formula_parser.dart';
 
-import  'package:quds_formula_parser/quds_formula_parser.dart';
+void _evaluatingWithVariables() {
+  var provider = FormulaProvider.defaultInstance;
 
-  
+  FormulaParser parser = FormulaParser(provider: provider);
 
-void  _evaluatingWithVariables() {
+  provider.insertVariable(Variable(symbol: 'x', value: 0));
 
-var  provider  =  FormulaProvider.defaultInstance;
+  String formulaStr = 'power(x,2)';
 
-FormulaParser  parser  =  FormulaParser(provider:  provider);
+  var formula = parser.parse(formulaStr);
 
-provider.insertVariable(Variable(symbol:  'x', value:  0));
+  var supporter = FormulaInfixToPostfixConvertor(formula: formula);
 
-String  formulaStr  =  'power(x,2)';
+  Stopwatch stopwatch = Stopwatch();
 
-var  formula  =  parser.parse(formulaStr);
+  stopwatch.start();
 
-var  supporter  =  FormulaInfixToPostfixConvertor(formula:  formula);
+  int times = 1000000;
 
-  
+  for (int i = 0; i < times; i++) {
+    provider.setVariableValue('x', i);
 
-Stopwatch  stopwatch  =  Stopwatch();
+    supporter.evaluate();
+  }
 
-stopwatch.start();
+  stopwatch.stop();
 
-int  times  =  1000000;
-
-for (int  i  =  0; i  <  times; i++) {
-
-provider.setVariableValue('x', i);
-
-supporter.evaluate();
-
+  print(
+      '$formulaStr evaluating times($times) took ${stopwatch.elapsedMilliseconds} ms');
 }
 
-stopwatch.stop();
-
-print(
-
-'$formulaStr evaluating times($times) took ${stopwatch.elapsedMilliseconds} ms');
-
-}
-
- void  main() {
-
-  
-
-_evaluatingWithVariables();
-
-  
-
+void main() {
+  _evaluatingWithVariables();
 }
 ```
 
@@ -316,60 +289,38 @@ You can also define custom function and use it in your formulas:
   
 
 ```dart
+import 'package:quds_formula_parser/quds_formula_parser.dart';
 
-import  'package:quds_formula_parser/quds_formula_parser.dart';
-
-    
-
-void  _parseAndEvaluateWithCustomProvider() {
-
+void _parseAndEvaluateWithCustomProvider() {
 // Prepare the terms provider
 
-FormulaProvider  provider  =  FormulaProvider();
+  FormulaProvider provider = FormulaProvider();
 
-provider.identifiers.addAll([
-
-BracketIdentifier(),
-
-NamedValuesIdentifier(provider:  provider),
-
-FunctionIdentifier(functions: [_CustomFunction()])
-
-]);
-
-  
+  provider.identifiers.addAll([
+    BracketIdentifier(),
+    NamedValuesIdentifier(provider: provider),
+    FunctionIdentifier(functions: [_CustomFunction()])
+  ]);
 
 // Prepare the parser
 
-var  parser  =  FormulaParser(provider:  provider);
+  var parser = FormulaParser(provider: provider);
 
-provider.insertVariable(Variable(symbol:  'x', value:  0));
+  provider.insertVariable(Variable(symbol: 'x', value: 0));
 
-  
+  var formula = parser.parse('randomize(x)');
 
-var  formula  =  parser.parse('randomize(x)');
+  var supporter = FormulaInfixToPostfixConvertor(formula: formula);
 
-  
+  for (int i = 0; i < 10; i++) {
+    provider.setVariableValue('x', i);
 
-var  supporter  =  FormulaInfixToPostfixConvertor(formula:  formula);
-
-for (int  i  =  0; i  <  10; i++) {
-
-provider.setVariableValue('x', i);
-
-print(supporter.evaluate());
-
+    print(supporter.evaluate());
+  }
 }
 
-}
- void  main() {
-
-  
-
-_parseAndEvaluateWithCustomProvider();
-
-  
-
+void main() {
+  _parseAndEvaluateWithCustomProvider();
 }
 ```
 
@@ -378,21 +329,16 @@ _parseAndEvaluateWithCustomProvider();
 ## Example
 
   
-
 See the [example](example/quds_formula_parser_example.dart) directory for a full example on how to use the package.
 
   
 
 ## Contributions
 
-  
-
 Contributions are welcome! Feel free to submit pull requests or open issues on our GitHub page.
 
   
 
 ## License
-
-  
 
 This package is licensed under the MIT License. See the LICENSE file for more information.
