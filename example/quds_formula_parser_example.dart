@@ -20,6 +20,7 @@ void _evaluateSimpleFormulas() {
 
   print(_parseFormulaAndEvaluate('5 + 9 / 2')); // 9.5
   print(_parseFormulaAndEvaluate('Atom.weight(\'he)')); // 4.0026
+  print(_parseFormulaAndEvaluate('Sin(π)')); // 0.0
   print(_parseFormulaAndEvaluate('5 - (2+7i)')); // 3.0 + -7.0i
   print(_parseFormulaAndEvaluate('Day(#2024-08-14#)')); // 14
   print(_parseFormulaAndEvaluate('Year(Today())')); // 2024

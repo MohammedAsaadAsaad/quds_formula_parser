@@ -35,5 +35,8 @@ class NamedValuesIdentifier extends FormulaTermIdentifier<NamedValue> {
   ///
   /// The pattern matches named values, including constants like `π` and variables using letters, underscores, and digits.
   @override
-  String get pattern => r'[\π\w\_]+([\w\d\_]+)?';
+  String get pattern {
+    String basePattern = r'\u0370-\u03FF\w\_';
+    return '[$basePattern]+([$basePattern\\d]+)?';
+  }
 }
