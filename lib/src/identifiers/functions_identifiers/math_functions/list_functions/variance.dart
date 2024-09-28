@@ -34,12 +34,8 @@ class VarianceFunction extends ListFunction {
   /// if there are no parameters. Additionally, checks that each parameter
   /// is of type [RealNumberWrapper]. Returns true if all checks pass.
   @override
-  bool checkParameters(List<FormulaTerm> terms) {
+  bool checkParameters(List<ValueWrapper> terms) {
     if (terms.isEmpty) return false;
-
-    for (var t in terms) {
-      if (t is! RealNumberWrapper) return false;
-    }
-    return true;
+    return terms.every((e) => e.isRealNumber);
   }
 }

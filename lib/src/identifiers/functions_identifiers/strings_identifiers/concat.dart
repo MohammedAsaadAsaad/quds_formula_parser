@@ -30,9 +30,6 @@ class StringConcatFunction extends StringFunction {
   @override
   bool checkParameters(List<ValueWrapper> terms) {
     if (terms.isEmpty) return false;
-    for (var t in terms) {
-      if (!t.isString) return false;
-    }
-    return true;
+    return terms.every((e) => e.isString);
   }
 }

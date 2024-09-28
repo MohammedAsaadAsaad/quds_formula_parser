@@ -24,10 +24,7 @@ class PointFunction extends GeometryFunction {
   @override
   bool checkParameters(List<ValueWrapper> terms) {
     if (terms.length < 2 || terms.length > 3) return false;
-    for (var t in terms) {
-      if (t is! RealNumberWrapper) return false;
-    }
-    return true;
+    return terms.every((e) => e.isRealNumber);
   }
 }
 

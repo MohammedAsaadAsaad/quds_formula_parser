@@ -20,13 +20,10 @@ class MedianFunction extends ListFunction {
   }
 
   @override
-  bool checkParameters(List<FormulaTerm> terms) {
+  bool checkParameters(List<ValueWrapper> terms) {
     // Ensure there is at least one parameter and all are RealNumberWrapper
     if (terms.isEmpty) return false;
 
-    for (var t in terms) {
-      if (t is! RealNumberWrapper) return false; // Validate parameter types
-    }
-    return true; // Valid parameters
+    return terms.every((e) => e.isRealNumber);
   }
 }

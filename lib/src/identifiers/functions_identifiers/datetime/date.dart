@@ -26,9 +26,6 @@ class DateFunction extends DateTimeFunction {
     if (terms.isEmpty || terms.length > 3) return false;
 
     // Validate that all parameters are real numbers
-    for (var t in terms) {
-      if (!t.isRealNumber) return false;
-    }
-    return true;
+    return terms.every((e) => e.isRealNumber);
   }
 }

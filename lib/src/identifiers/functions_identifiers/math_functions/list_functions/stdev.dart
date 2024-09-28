@@ -35,12 +35,8 @@ class StandardDeviationFunction extends ListFunction {
   ///
   /// Returns true if the parameters are valid, otherwise false.
   @override
-  bool checkParameters(List<FormulaTerm> terms) {
+  bool checkParameters(List<ValueWrapper> terms) {
     if (terms.isEmpty) return false;
-
-    for (var t in terms) {
-      if (t is! RealNumberWrapper) return false;
-    }
-    return true;
+    return terms.every((e) => e.isRealNumber);
   }
 }

@@ -29,15 +29,9 @@ class MinFunction extends ListFunction {
   }
 
   @override
-  bool checkParameters(List<FormulaTerm> terms) {
+  bool checkParameters(List<ValueWrapper> terms) {
     // Ensure there is at least one parameter
     if (terms.isEmpty) return false;
-
-    // Check if all terms are of type RealNumberWrapper
-    for (var t in terms) {
-      if (t is! RealNumberWrapper) return false;
-    }
-
-    return true; // Valid parameters
+    return terms.every((e) => e.isRealNumber);
   }
 }
