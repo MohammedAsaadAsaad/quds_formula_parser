@@ -116,10 +116,19 @@ void _parseAndEvaluateWithCustomProvider() {
   ]);
   provider.registerFunction(
       notations: ['Randomize', 'Custom.Rnd'],
+      checkParameters: (params) => params.length == 1 && params.first is num,
+      evaluator: (params) {
+        return params.first * Random().nextInt(100);
+      });
+
+  provider.registerFunction(
+      notations: ['SinX'],
+      checkParameters: (params) => params.length == 1 && params.first is num,
       evaluator: (params) {
         return params.first * Random().nextInt(100);
       },
-      checkParameters: (params) => params.length == 1 && params.first is num);
+      manipulateResult: (r) =>
+          r.abs() < 1e-6 ? 0.0 : r); // Ignore very small values
 
   // Prepare the parser
   var parser = FormulaParser(provider: provider);

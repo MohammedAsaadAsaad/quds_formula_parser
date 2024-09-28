@@ -48,6 +48,7 @@ class FormulaFunctionRegister extends FormulaFunction {
   FormulaFunctionRegister(
       {required super.functionNotations,
       required this.calculationsMethod,
+      super.manipulateOutput,
       this.parametersCheckerMethod});
   final Function(Iterable parameters) calculationsMethod;
   final bool Function(Iterable parameters)? parametersCheckerMethod;

@@ -59,12 +59,14 @@ class FormulaProvider {
   bool registerFunction(
       {required List<String> notations,
       required dynamic Function(Iterable<dynamic> parameters) evaluator,
-      bool Function(Iterable<dynamic> parameters)? checkParameters}) {
+      bool Function(Iterable<dynamic> parameters)? checkParameters,
+      dynamic Function(dynamic result)? manipulateResult}) {
     _ensureFunctionsIdentifierSet();
     var functionsIdentifier = _functionIdentifier!;
     functionsIdentifier.functions.add(FormulaFunctionRegister(
         functionNotations: notations,
         calculationsMethod: evaluator,
+        manipulateOutput: manipulateResult,
         parametersCheckerMethod: checkParameters));
     return true;
   }
