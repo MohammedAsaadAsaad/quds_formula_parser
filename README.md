@@ -1,7 +1,9 @@
 
 # Quds Formula Parser
 
-  
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Pub Version](https://img.shields.io/pub/v/quds_formula_parser.svg)
+ 
 
 Quds Formula Parser is a powerful Dart package designed to parse, evaluate, and manipulate mathematical formulas in various forms. It supports diverse data types, including numbers, dates, and custom objects, offering a flexible solution for formula-based calculations.
 

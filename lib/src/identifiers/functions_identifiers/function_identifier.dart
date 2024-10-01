@@ -1,11 +1,12 @@
 import 'package:quds_formula_parser/quds_formula_parser.dart';
 export 'math_functions/math_functions.dart';
-export 'strings_identifiers/strings.dart';
+export 'strings/string_functions.dart';
 export 'logical/logical.dart';
 export 'single_parameter_function.dart';
-export 'datetime/datetime.dart';
+export 'datetime/datetime_functions.dart';
 export 'core_functions/core_functions.dart';
 export 'science/science.dart';
+export 'iterables/iterables.dart';
 
 /// A class to identify and parse function names in a formula.
 ///
@@ -18,9 +19,14 @@ class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
   /// A list of available functions to identify from.
   final List<FormulaFunction> functions;
 
+  /// The [FormulaProvider] that stores the functions.
   final FormulaProvider provider;
 
   /// Creates a [FunctionIdentifier] with the provided list of functions.
+  ///
+  /// **Parameters**:
+  /// - [provider]: The formula provider managing the functions.
+  /// - [functions]: A list of available [FormulaFunction] instances to be matched.
   FunctionIdentifier({required this.provider, required this.functions}) {
     provider.setFunctionsIdentifier(this);
   }
@@ -30,6 +36,12 @@ class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
   /// Takes a string [str], converts it to lowercase, and compares it with the
   /// notations of the available functions. If a match is found, the corresponding
   /// [FormulaFunction] is returned. If no match is found, it returns `null`.
+  ///
+  /// **Parameters**:
+  /// - [str]: The input string representing the function name.
+  ///
+  /// **Returns**:
+  /// - The matching [FormulaFunction], or `null` if no match is found.
   @override
   FormulaFunction? parse(String str) {
     var s = str.toLowerCase();

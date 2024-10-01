@@ -30,8 +30,8 @@ extension NumbersCalculations on Iterable<num> {
   num? max() {
     if (isEmpty) return null;
     num result = first;
-    for (int i = 1; i < length; i++) {
-      if (elementAt(i) > result) result = elementAt(i);
+    for (var value in this) {
+      if (value > result) result = value;
     }
     return result;
   }
@@ -43,8 +43,8 @@ extension NumbersCalculations on Iterable<num> {
   num? min() {
     if (isEmpty) return null;
     num result = first;
-    for (int i = 1; i < length; i++) {
-      if (elementAt(i) < result) result = elementAt(i);
+    for (var value in this) {
+      if (value < result) result = value;
     }
     return result;
   }
@@ -71,6 +71,28 @@ extension NumbersCalculations on Iterable<num> {
     }
   }
 
+  /// Returns the mode (most frequent value) from the iterable.
+  ///
+  /// Returns `null` if the iterable is empty. Iterates through the
+  /// elements and counts the frequency of each value.
+  num? mode() {
+    if (isEmpty) return null;
+
+    Map<num, int> frequency = {};
+    num? mode;
+    int maxCount = 0;
+
+    for (var value in this) {
+      frequency[value] = (frequency[value] ?? 0) + 1;
+      if (frequency[value]! > maxCount) {
+        maxCount = frequency[value]!;
+        mode = value;
+      }
+    }
+
+    return mode;
+  }
+
   /// Returns the standard deviation of the elements in the iterable.
   ///
   /// Returns `null` if the iterable is empty. The standard deviation is
@@ -90,6 +112,8 @@ extension NumbersCalculations on Iterable<num> {
 }
 
 /// Helper function to compute GCD (Greatest Common Divisor)
+///
+/// The GCD is calculated using the Euclidean algorithm.
 int gcd(int a, int b) {
   while (b != 0) {
     final t = b;
@@ -97,4 +121,93 @@ int gcd(int a, int b) {
     a = t;
   }
   return a;
+}
+
+/// Helper function to compute LCM (Least Common Multiplier)
+///
+/// LCM is calculated as the absolute value of the product of the two numbers
+/// divided by their GCD.
+int lcm(int a, int b) {
+  var result = (a * b) / gcd(a, b);
+  return result < 0 ? -result.toInt() : result.toInt();
+}
+
+/// Returns the hyperbolic cosine of [x].
+num cosh(num x) => (pow(e, x) + pow(e, -x)) / 2.0;
+
+/// Returns the hyperbolic sine of [x].
+num sinh(num x) => (pow(e, x) - pow(e, -x)) / 2.0;
+
+/// Returns the hyperbolic tangent of [x].
+num tanh(num x) => sinh(x) / cosh(x);
+
+/// Returns the factorial of [n].
+///
+/// Factorial is calculated as the product of all positive integers less
+/// than or equal to [n].
+int factorial(int n) {
+  if (n < 0) {
+    throw ArgumentError('Factorial is not defined for negative numbers.');
+  }
+
+  int result = 1;
+  for (int i = 2; i <= n; i++) {
+    result *= i;
+  }
+  return result;
+}
+
+/// Checks if a number [n] is prime.
+///
+/// Returns `true` if [n] is prime, `false` otherwise.
+bool isPrime(int n) {
+  if (n < 2) return false;
+  for (int i = 2; i <= sqrt(n); i++) {
+    if (n % i == 0) return false;
+  }
+  return true;
+}
+
+/// Returns the nth Fibonacci number.
+///
+/// Uses an iterative approach to calculate the nth Fibonacci number.
+int fibonacci(int n) {
+  if (n == 0) return 0;
+  if (n == 1) return 1;
+
+  int prev1 = 0;
+  int prev2 = 1;
+  int current = 0;
+
+  for (int i = 2; i <= n; i++) {
+    current = prev1 + prev2;
+    prev1 = prev2;
+    prev2 = current;
+  }
+
+  return current;
+}
+
+/// Returns the number of permutations of [n] items taken [r] at a time.
+///
+/// The number of permutations is calculated as `n! / (n - r)!`.
+int permutations(int n, int r) {
+  return factorial(n) ~/ factorial(n - r);
+}
+
+/// Returns the number of combinations of [n] items taken [r] at a time.
+///
+/// The number of combinations is calculated as `n! / (r!(n - r)!)`.
+int combinations(int n, int r) {
+  return factorial(n) ~/ (factorial(r) * factorial(n - r));
+}
+
+/// Clamps [value] between [min] and [max].
+///
+/// If [value] is less than [min], [min] is returned. If [value] is greater
+/// than [max], [max] is returned. Otherwise, [value] is returned.
+num clamp(num value, num min, num max) {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
 }

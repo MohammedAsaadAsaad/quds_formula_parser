@@ -1,6 +1,7 @@
 import 'package:quds_formula_parser/quds_formula_parser.dart';
 import 'dart:io';
 
+/// The main entry point for the program, demonstrating various formula evaluation scenarios.
 void main() {
   _evaluateSimpleFormulas();
 
@@ -15,6 +16,7 @@ void main() {
   _writeCustomFormula();
 }
 
+/// Evaluates and prints simple formulas using the default formula provider.
 void _evaluateSimpleFormulas() {
   print('\nEvaluating simple formulas');
 
@@ -27,10 +29,22 @@ void _evaluateSimpleFormulas() {
   print(_parseFormulaAndEvaluate('Year(Today())')); // 2024
   print(_parseFormulaAndEvaluate(
       'If(And(Year(Today())%4=0,Year(Today())%100<>0),"Leap year","Not leap year")')); // Leap year / Not leap year
+  print(_parseFormulaAndEvaluate('Len(ToStr(15))')); // 2
   print(_parseFormulaAndEvaluate('Point.Y({5,-7})')); // -7
   print(_parseFormulaAndEvaluate('Point.Y(Point(5,-2))')); // -2
+  print(_parseFormulaAndEvaluate(
+      '"Free" + " " + "Palestine"')); // "Free Palestine"
+
+  print(_parseFormulaAndEvaluate('Intersect(Set(2,5,9),Set(5,7,2))')); // [2, 5]
 }
 
+/// Parses and evaluates a given formula string using the default formula provider.
+///
+/// **Parameters**:
+/// - [str]: The formula string to be parsed and evaluated.
+///
+/// **Returns**:
+/// - The evaluated result of the formula.
 dynamic _parseFormulaAndEvaluate(String str) {
   FormulaParser parser =
       FormulaParser(provider: FormulaProvider.defaultInstance);
@@ -42,6 +56,9 @@ dynamic _parseFormulaAndEvaluate(String str) {
   return result;
 }
 
+/// Changes a variable's value by evaluating a formula string that sets the variable.
+///
+/// Demonstrates how to modify the value of a variable by parsing and evaluating a formula.
 void _changeVariableValueByFormula() {
   print('\nSetting variable value by formula string');
 
@@ -57,6 +74,10 @@ void _changeVariableValueByFormula() {
   print('$formulaStr = ${supporter.evaluate()}');
 }
 
+/// Evaluates a formula with a variable, changing the variable's value multiple times.
+///
+/// This demonstrates performance when evaluating the same formula repeatedly
+/// with different variable values.
 void _evaluatingWithVariables() {
   print('\nEvaluating formula with changing variable value many times');
   var provider = FormulaProvider.defaultInstance;
@@ -78,6 +99,7 @@ void _evaluatingWithVariables() {
       '$formulaStr evaluating times($times) took ${stopwatch.elapsedMilliseconds} ms');
 }
 
+/// Reads and evaluates a custom formula inputted by the user via the console.
 void _writeCustomFormula() {
   bool cont = false;
   String? formulaString;
@@ -105,6 +127,10 @@ void _writeCustomFormula() {
   _writeCustomFormula();
 }
 
+/// Parses and evaluates formulas using a custom formula provider.
+///
+/// This function demonstrates how to use a custom formula provider
+/// with user-defined functions for formula evaluation.
 void _parseAndEvaluateWithCustomProvider() {
   print('\nParsing with evaluating with custom provider');
 
@@ -125,7 +151,7 @@ void _parseAndEvaluateWithCustomProvider() {
       notations: ['SinX'],
       checkParameters: (params) => params.length == 1 && params.first is num,
       evaluator: (params) {
-        return params.first * Random().nextInt(100);
+        return sin(params.first);
       },
       manipulateResult: (r) =>
           r.abs() < 1e-6 ? 0.0 : r); // Ignore very small values
@@ -143,20 +169,9 @@ void _parseAndEvaluateWithCustomProvider() {
   }
 }
 
-// class _CustomFunction extends FormulaFunction {
-//   _CustomFunction() : super(functionNotations: ['Custom.Rnd', 'Randomize']);
-
-//   @override
-//   calculate(List<ValueWrapper> parameters) {
-//     num arg = parameters.first.value;
-//     return arg * Random().nextInt(100);
-//   }
-
-//   @override
-//   bool checkParameters(List<ValueWrapper> terms) =>
-//       terms.length == 1 && terms.first.isRealNumber;
-// }
-
+/// Completes missing terms in formulas and evaluates them.
+///
+/// This demonstrates handling incomplete formulas and ensuring proper formula completion and evaluation.
 void _completePossibleMissingTerms() {
   FormulaParser parser = FormulaParser();
   parser.setVariableValue('x', 0);
