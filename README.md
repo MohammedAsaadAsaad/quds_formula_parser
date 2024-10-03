@@ -23,151 +23,56 @@ Quds Formula Parser is a powerful Dart package designed to parse, evaluate, and 
 
   
 ## Supported Types
-
-### 1. **Numbers**:
-
--   **Real Numbers**: Represented by classes like `RealNumber` and other numerical utilities.
--   **Complex Numbers**: Handling of complex numbers through the `ComplexNumber` class.
--   **Boolean/Logic**: Boolean values are managed through `BooleanWrapper` and related logic types.
-
-### 2. **Date and Time**:
-
--   **Date**: Managed by the `Date` class for handling date-related functionalities.
--   **Time**: Handled by the `Time` class for time manipulations.
--   **Duration**: Represented by the `QudsDuration` class for handling time spans.
--   **DateTime**: `QudsDateTime` class adds specific custom handling for datetime operations.
-
-### 3. **Math and Geometry**:
-
--   **2D Point**: Handled by the `Point2D` class, which represents a point in a two-dimensional space.
--   **3D Point**: Handled by the `Point3D` class for three-dimensional geometry.
-
-### 4. **Strings**:
-
--   **Strings**: Managed by `StringWrapper` and `Strings` classes for string manipulation.
-
-### 5. **Science**:
-
--   **Atom**: Scientific data types related to chemistry and atomic structure represented by the `Atom` class.
+| **Category**          | **Type**               | **Description**                                                                                      |
+|-----------------------|------------------------|------------------------------------------------------------------------------------------------------|
+| **Numbers**           | Real Numbers           | Represented by `num` and other numerical utilities.                                                |
+|                       | Complex Numbers        | Handling of complex numbers through the `ComplexNumber` class.                                     |
+|                       | Boolean/Logic          | Boolean values are managed through `BooleanWrapper` and related logic types.                       |
+| **Date and Time**     | Date                   | Managed by the `Date` class for handling date-related functionalities.                              |
+|                       | Time                   | Handled by the `Time` class for time manipulations.                                                |
+|                       | Duration               | Represented by the `QudsDuration` class for handling time spans.                                   |
+|                       | DateTime               | `QudsDateTime` class adds specific custom handling for datetime operations.                        |
+| **Math and Geometry** | 2D Point               | Handled by the `Point2D` class, which represents a point in a two-dimensional space.               |
+|                       | 3D Point               | Handled by the `Point3D` class for three-dimensional geometry.                                      |
+| **Strings**           | Strings                | Managed by `StringWrapper` and `Strings` classes for string manipulation.                          |
+| **Iterables**         | Iterable               | Represents a collection of elements that can be iterated over, such as lists or sets.             |
+| **Science**           | Atom                   | Scientific data types related to chemistry and atomic structure represented by the `Atom` class.   |
 
 
 ----------
 ### **Operators (Defined in the Package)**:
+| **Category**          | **Operator**         | **Description**                                            |
+|-----------------------|----------------------|------------------------------------------------------------|
+| **Arithmetic**        | `+`                  | Addition operator for numerical values or strings.        |
+|                       | `-`                  | Subtraction operator for numerical values.                |
+|                       | `*`                  | Multiplication operator for numerical values.             |
+|                       | `/`                  | Division operator for numerical values.                   |
+|                       | `%`                  | Modulus operator to find the remainder of division.      |
+|                       | `^`                  | Exponentiation operator for raising numbers to a power.  |
+| **Comparison**        | `==`                 | Equality operator to compare two values.                  |
+|                       | `!=`                 | Inequality operator to check if two values are different. |
+|                       | `>`                  | Greater than operator for numerical comparison.           |
+|                       | `<`                  | Less than operator for numerical comparison.              |
+|                       | `>=`                 | Greater than or equal to operator for numerical comparison.|
+|                       | `<=`                 | Less than or equal to operator for numerical comparison.  |
 
-The following operators are implemented within the parsing logic:
-
-1.  **Arithmetic Operators**:
-    
-    -   `+` : Addition
-    -   `-` : Subtraction
-    -   `*` : Multiplication
-    -   `/` : Division
-    -   `^` : Exponentiation (raising to a power)
-2.  **Relational Operators**:
-    
-    -   `=` : Equal to
-    -   `<>` : Not equal to
-    -   `>` : Greater than
-    -   `<` : Less than
-    -   `>=` : Greater than or equal to
-    -   `<=` : Less than or equal to
-
- 
 ----------
 
 ### **Functions (Defined in the Package)**:
+| **Category**              | **Supported Functions**                                                                                                                      |
+|---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Mathematical Functions** | `Abs`, `Int`, `Floor`, `Ceiling`, `SqRt`, `Square`, `Exp`, `Pow`, `Mod`, `GCD`, `LCM`, `Factorial`, `Fibonacci`, `IsPrime`, `IsEven`, `IsOdd`, `Clamp` |
+| **Trigonometric Functions**| `Sin`, `Cos`, `Tan`, `Cot`, `Sec`, `Csc`, `ASin`, `ACos`, `ATan`, `ATan2`                                                                      |
+| **Logical Functions**      | `If`, `And`, `Or`, `Not`, `XOR`, `IfError`, `RandomBool`, `AllTrue`, `AnyTrue`, `AllFalse`, `AnyFalse`                                         |
+| **String Functions**       | `Len`, `Lower`, `Upper`, `Trim`, `TrimLeft`, `TrimRight`, `Replace`, `Contains`, `StartsWith`, `EndsWith`, `Concat`, `ToStr`                   |
+| **Date & Time Functions**  | `Date`, `Year`, `Month`, `Day`, `WeekDay`, `Days`, `Now`, `Today`, `Hour`, `Minute`, `Second`                                                  |
+| **Geometry Functions**     | `Point`, `Point.X`, `Point.Y`, `Point.Z`, `Distance`, `Hypotenuse`                                                                             |
+| **Statistical Functions**  | `Avg`, `Product`, `Count`, `Max`, `Min`, `Median`, `Sum`, `Variance`, `StDev`, `Mode`, `Permutations`, `Combinations`                          |
+| **Iterable Functions**     | `List`, `Reverse`                                                                                                                             |
+| **Set Operations**         | `Set`, `Union`, `Intersect`, `Difference`                                                                                                     |
+| **Atom Functions**         | `Atom`, `Atom.Name`, `Atom.Symbol`, `Atom.Number`, `Atom.Weight`, `Atom.BoilingPoint`, `Atom.MeltingPoint`, `Atom.Density`, `Atom.IonizationEnergy`, `Atom.Row`, `Atom.Column`, `Atom.EarthCrust`, `Atom.DiscoveryYear`, `Atom.GroupNumber` |
+| **Core Functions**         | `Type`, `ValueType`, `IsNumber`, `IsReal`, `IsComplex`, `IsPoint`, `IsPoint2D`, `IsPoint3D`, `IsDate`, `IsTime`, `IsDateTime`, `IsDuration`, `IsBool`, `IsFraction`, `IsAtom`, `IsText` |
 
-The following are functions that are specifically implemented within the codebase.
-
-### **Type & Value Checking Functions**
-
--   **Type**: Returns the data type of the input.
--   **IsNumber**: Checks if the input is a number.
--   **IsReal**: Determines if the input is a real number.
--   **IsComplex**: Verifies if the input is a complex number.
--   **IsText**: Checks if the input is a string.
--   **IsNA**: Identifies if the input is "not available".
--   **IsNull**: Determines if the input is null.
-
-### **Date & Time Functions**
-
--   **Today**: Returns the current date.
--   **Now**: Returns the current date and time.
--   **Date**: Creates a date from provided values.
--   **Year**: Extracts the year from a date.
--   **Month**: Extracts the month from a date.
--   **Day**: Extracts the day from a date.
--   **WeekDay**: Returns the day of the week for a date.
--   **Days**: Calculates the difference in days between two dates.
-
-### **Logical & Conditional Functions**
-
--   **And**: Logical AND operation.
--   **IfError**: Returns a value if an error occurs.
--   **If**: Evaluates a condition and returns a value based on true or false.
--   **Not**: Logical negation (NOT operation).
--   **Or**: Logical OR operation.
-
-### **Geometry & Distance Functions**
-
--   **Distance**: Calculates the distance between two points.
--   **PointX**: Returns the X coordinate of a point.
--   **PointY**: Returns the Y coordinate of a point.
--   **PointZ**: Returns the Z coordinate of a point.
--   **Point**: Creates a point from coordinates.
-
-### **Statistical & Aggregation Functions**
-
--   **Sum**: Adds a list of numbers.
--   **Average**: Calculates the average of numbers.
--   **Product**: Multiplies a list of numbers.
--   **Count**: Counts the number of items.
--   **Max**: Finds the maximum value.
--   **Min**: Finds the minimum value.
--   **Median**: Returns the median value.
--   **StandardDeviation**: Calculates the standard deviation of numbers.
--   **Variance**: Returns the variance of a list of numbers.
-
-### **Mathematical Functions**
-
--   **Abs**: Returns the absolute value of a number.
--   **Mod**: Returns the remainder after division.
--   **Round**: Rounds a number to specified decimal places.
--   **Int**: Returns the integer part of a number.
--   **Power**: Raises a number to a specified power.
--   **SqRt**: Calculates the square root of a number.
--   **Log**: Computes the logarithm of a number.
--   **Exp**: Returns `e` raised to the power of a number.
--   **Sin**: Returns the sine of an angle.
--   **Cos**: Returns the cosine of an angle.
--   **Tan**: Returns the tangent of an angle.
-
-### **Atom Functions (Scientific Functions)**
-
--   **Atom**: Represents an atom in calculations.
--   **AtomName**: Returns the name of an atom.
--   **AtomSymbol**: Returns the atomic symbol.
--   **AtomicNumber**: Returns the atomic number.
--   **AtomicWeight**: Returns the atomic weight.
--   **BoilingPoint**: Returns the boiling point of an atom.
--   **MeltingPoint**: Returns the melting point of an atom.
--   **AtomDensity**: Returns the density of an atom.
--   **AtomIonizationEnergy**: Returns the ionization energy of an atom.
--   **AtomRowInTable**: Returns the row of an atom in the periodic table.
--   **AtomColumnInTable**: Returns the column of an atom in the periodic table.
--   **AtomEarthCrust**: Returns the abundance of an atom in the Earth's crust.
--   **AtomDiscoveryYear**: Returns the year the atom was discovered.
--   **AtomGroupNumber**: Returns the group number of an atom in the periodic table.
-
-### **String Functions**
-
--   **StringLength**: Returns the length of a string.
--   **StringConcat**: Concatenates multiple strings.
--   **ToUpper**: Converts a string to uppercase.
--   **ToLower**: Converts a string to lowercase.
--   **Trim**: Removes spaces from both sides of a string.
--   **TrimLeft**: Removes spaces from the left side of a string.
--   **TrimRight**: Removes spaces from the right side of a string.
 
 ## Installation
 
