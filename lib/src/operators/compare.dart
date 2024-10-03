@@ -21,13 +21,13 @@ class CompareOperator extends Operator {
   /// - `=`: Equal to
   /// - `<>`: Not equal to
   ///
-  /// Returns a [BooleanWrapper] with the result of the comparison, or [NAValue] if the operands are invalid.
+  /// Returns the result of the comparison, or [NAValue] if the operands are invalid.
   @override
   calculate(ValueWrapper leftOperand, ValueWrapper rightOperand) {
     var a = leftOperand.value;
     var b = rightOperand.value;
 
-    ValueWrapper? result;
+    dynamic result;
 
     switch (symbol) {
       case '>':
@@ -43,9 +43,11 @@ class CompareOperator extends Operator {
         result = _performLessOrEqual(a, b);
         break;
       case '=':
+      case '==':
         result = _performEqual(a, b);
         break;
       case '<>':
+      case '!=':
         result = _performNotEqual(a, b);
         break;
     }
@@ -54,37 +56,37 @@ class CompareOperator extends Operator {
   }
 
   /// Performs a `>` (greater than) comparison for numeric values.
-  ValueWrapper? _performMore(a, b) {
-    if (a is num && b is num) return BooleanWrapper(a > b);
+  dynamic _performMore(a, b) {
+    if (a is num && b is num) return a > b;
     return NAValue();
   }
 
   /// Performs a `>=` (greater than or equal to) comparison for numeric values.
-  ValueWrapper? _performMoreOrEqual(a, b) {
-    if (a is num && b is num) return BooleanWrapper(a >= b);
+  _performMoreOrEqual(a, b) {
+    if (a is num && b is num) return a >= b;
     return NAValue();
   }
 
   /// Performs a `<` (less than) comparison for numeric values.
-  ValueWrapper? _performLess(a, b) {
-    if (a is num && b is num) return BooleanWrapper(a < b);
+  _performLess(a, b) {
+    if (a is num && b is num) return a < b;
     return NAValue();
   }
 
   /// Performs a `<=` (less than or equal to) comparison for numeric values.
-  ValueWrapper? _performLessOrEqual(a, b) {
-    if (a is num && b is num) return BooleanWrapper(a <= b);
+  _performLessOrEqual(a, b) {
+    if (a is num && b is num) return a <= b;
     return NAValue();
   }
 
   /// Performs an `=` (equal to) comparison for any type of values.
-  ValueWrapper? _performEqual(a, b) {
-    return BooleanWrapper(a == b);
+  _performEqual(a, b) {
+    return a == b;
   }
 
   /// Performs a `<>` (not equal to) comparison for any type of values.
-  ValueWrapper? _performNotEqual(a, b) {
-    return BooleanWrapper(a != b);
+  _performNotEqual(a, b) {
+    return a != b;
   }
 
   /// Returns the string representation of the operator, which is the comparison symbol.

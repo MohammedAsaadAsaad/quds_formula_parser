@@ -7,7 +7,8 @@
         {
             "name": "quds_formula_parser",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "example/quds_formula_parser_example.dart"
         }
     ]
 }

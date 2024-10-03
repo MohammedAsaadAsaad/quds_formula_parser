@@ -30,7 +30,7 @@ class AddOperator extends Operator {
     dynamic result;
 
     if (a is String || b is String) {
-      result = StringWrapper('$a$b');
+      result = '$a$b';
     } else if (a is num && b is num) {
       result = _performNums(a, b);
     } else if (a is ComplexNumber && b is num) {

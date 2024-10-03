@@ -101,6 +101,7 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
   ///
   /// Uses a stack to evaluate the postfix notation of the formula, applying operators and
   /// functions as necessary. Returns the final result of the evaluation.
+  @override
   dynamic evaluate() {
     Queue<FormulaValue> stack = Queue<FormulaValue>();
     List<FormulaTerm> terms = output.toList();

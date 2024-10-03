@@ -18,6 +18,21 @@ void registerListsFunctions(FormulaProvider provider) {
   // Registers a function to create a list from the parameters.
   defineListsFunction(['List'], (params) => params);
 
+  void defineListWithAnotherParameterParameters(List<String> notations,
+      dynamic Function(Iterable lst, dynamic arg) calculationMethod) {
+    provider.registerFunction(
+        notations: notations,
+        evaluator: (params) => calculationMethod(params.first, params.second),
+        checkParameters: (params) =>
+            params.isCouple && params.first is Iterable);
+  }
+
+  defineListWithAnotherParameterParameters(['MemberAt', 'ElementAt'],
+      (lst, a) => a is! int ? null : lst.elementAt(a));
+
+  defineListWithAnotherParameterParameters(
+      ['IndexOf'], (lst, a) => lst.toList().indexOf(a));
+
   // Registers a function to reverse a list.
   defineListsFunction(['Reverse'], (params) => params.toList().reversed);
 }

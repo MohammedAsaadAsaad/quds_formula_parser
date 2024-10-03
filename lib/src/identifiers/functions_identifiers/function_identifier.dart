@@ -17,7 +17,7 @@ export 'iterables/iterables.dart';
 /// on the input string.
 class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
   /// A list of available functions to identify from.
-  final List<FormulaFunction> functions;
+  final List<FormulaFunction> functions = [];
 
   /// The [FormulaProvider] that stores the functions.
   final FormulaProvider provider;
@@ -27,7 +27,7 @@ class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
   /// **Parameters**:
   /// - [provider]: The formula provider managing the functions.
   /// - [functions]: A list of available [FormulaFunction] instances to be matched.
-  FunctionIdentifier({required this.provider, required this.functions}) {
+  FunctionIdentifier({required this.provider}) {
     provider.setFunctionsIdentifier(this);
   }
 

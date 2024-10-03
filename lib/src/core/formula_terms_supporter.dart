@@ -13,6 +13,8 @@ abstract class FormulaTermsSupporter {
   ///
   /// Returns a [FormulaSupporterResult] containing organized terms and messages.
   FormulaSupporterResult organize();
+
+  dynamic evaluate();
 }
 
 /// A result class containing the organized terms and any messages generated during the organization process.

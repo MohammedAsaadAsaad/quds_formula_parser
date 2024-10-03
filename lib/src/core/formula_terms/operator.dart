@@ -8,7 +8,7 @@ abstract class Operator extends FormulaTerm {
 
   /// Performs the calculation based on the given left and right operands.
   /// Subclasses must implement this method to define specific operator behavior.
-  ValueWrapper calculate(ValueWrapper leftOperand, ValueWrapper rightOperand);
+  calculate(ValueWrapper leftOperand, ValueWrapper rightOperand);
 
   /// Returns the precedence level of the operator.
   /// Higher values indicate higher precedence.

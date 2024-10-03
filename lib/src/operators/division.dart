@@ -17,21 +17,9 @@ class DivisionOperator extends Operator {
   ///
   /// Returns the result wrapped in a [FormulaValue].
   @override
-  calculate(FormulaTerm leftOperand, FormulaTerm rightOperand) {
-    dynamic aValue = (leftOperand is RealNumberWrapper)
-        ? leftOperand.value
-        : (leftOperand is ComplexNumberWrapper)
-            ? leftOperand.value
-            : leftOperand;
-
-    dynamic bValue = (rightOperand is RealNumberWrapper)
-        ? rightOperand.value
-        : (rightOperand is ComplexNumberWrapper)
-            ? rightOperand.value
-            : rightOperand;
-
-    var a = aValue;
-    var b = bValue;
+  calculate(ValueWrapper leftOperand, ValueWrapper rightOperand) {
+    var a = leftOperand.value;
+    var b = rightOperand.value;
 
     dynamic result;
 
@@ -114,20 +102,8 @@ class ReminderOperator extends Operator {
   /// Returns the result wrapped in a [FormulaValue].
   @override
   calculate(ValueWrapper leftOperand, ValueWrapper rightOperand) {
-    dynamic aValue = (leftOperand is RealNumberWrapper)
-        ? leftOperand.value
-        : (leftOperand is ComplexNumberWrapper)
-            ? leftOperand.value
-            : leftOperand;
-
-    dynamic bValue = (rightOperand is RealNumberWrapper)
-        ? rightOperand.value
-        : (rightOperand is ComplexNumberWrapper)
-            ? rightOperand.value
-            : rightOperand;
-
-    var a = aValue;
-    var b = bValue;
+    var a = leftOperand.value;
+    var b = rightOperand.value;
 
     if (a is! num || b is! num) return NAValue();
     return toFormulaValue(a % b);

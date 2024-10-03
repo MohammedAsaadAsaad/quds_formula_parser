@@ -62,26 +62,11 @@ class Date {
   /// Returns the day component of the date.
   int get day => _day;
 
-  /// Returns the day of the week for the current date as a string (e.g., 'Monday', 'Tuesday').
-  String getDayOfWeek() {
-    int q = _day;
-    int m = _month < 3 ? _month + 12 : _month;
-    int K = _month < 3 ? _year - 1 : _year;
-    int J = K ~/ 100;
-
-    int f = (q + ((13 * (m + 1)) ~/ 5) + K + (K ~/ 4) + (J ~/ 4) - (2 * J)) % 7;
-
-    List<String> daysOfWeek = [
-      'Saturday',
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday'
-    ];
-
-    return daysOfWeek[f];
+  /// Returns the day of the week for the current date as an integer starting from 1: Saturday.
+  int getDayOfWeek() {
+    var wd = DateTime(_year, _month, _day).weekday;
+    var d = (wd + 9) % 7;
+    return d;
   }
 
   /// Formats the date as a string based on the provided format string.

@@ -31,6 +31,6 @@ class Variable extends NamedValue {
 class Constant extends NamedValue {
   /// Constructs a `Constant` with a required `symbol` and a `value`.
   /// The `value` is converted to a `FormulaValue` using the `toFormulaValue` function.
-  Constant({required super.symbol, dynamic value})
+  Constant({required super.symbol, required dynamic value})
       : super(value: toFormulaValue(value));
 }

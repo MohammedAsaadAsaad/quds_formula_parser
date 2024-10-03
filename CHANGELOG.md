@@ -51,3 +51,7 @@
 >+ `Iterables` with `IterableWrapper` as its values wrapper.
 
 - Simplified some functions registrations.
+
+## 0.0.6
+- Simplified the bodies of most of operators.
+- Defined new functions:`MemberAt`, `IndexOf`.

@@ -18,20 +18,9 @@ class MultiplyOperator extends Operator {
   /// Returns the result wrapped in a [FormulaValue].
   @override
   calculate(ValueWrapper leftOperand, ValueWrapper rightOperand) {
-    dynamic aValue = (leftOperand is RealNumberWrapper)
-        ? leftOperand.value
-        : (leftOperand is ComplexNumberWrapper)
-            ? leftOperand.value
-            : leftOperand;
+    var a = leftOperand.value;
 
-    dynamic bValue = (rightOperand is RealNumberWrapper)
-        ? rightOperand.value
-        : (rightOperand is ComplexNumberWrapper)
-            ? rightOperand.value
-            : rightOperand;
-
-    var a = aValue;
-    var b = bValue;
+    var b = rightOperand.value;
 
     dynamic result;
 

@@ -41,8 +41,15 @@ class OperatorsIdentifiers extends FormulaTermIdentifier {
       case '>=':
       case '<=':
       case '=':
+      case '==':
       case '<>':
+      case '!=':
         return CompareOperator(str);
+      case '&':
+      case '&&':
+      case '|':
+      case '||':
+        return LogicalOperator(str);
     }
     return null;
   }
@@ -51,5 +58,5 @@ class OperatorsIdentifiers extends FormulaTermIdentifier {
   ///
   /// The pattern matches common operators like `+`, `-`, `*`, `/`, `×`, `÷`, `^`, `<>`, `<=`, `>=`, `<`, `>`, `=`, `&`, `%`.
   @override
-  String get pattern => r'(\+|-|\*|\/|\×|\÷|\^|<>|<=|>=|<|>|=|&|%)';
+  String get pattern => r'\+|-|\*|\/|\×|\÷|\^|!=|<>|<=|>=|<|>|=|&|%';
 }

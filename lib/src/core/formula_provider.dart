@@ -8,6 +8,12 @@ import '../../quds_formula_parser.dart';
 /// for formula parsing and evaluation.
 class FormulaProvider {
   FunctionIdentifier? _functionIdentifier;
+  FunctionIdentifier? get functionsIdentifier => _functionIdentifier;
+  NamedValuesIdentifier? _namedValuesIdentifier;
+  NamedValuesIdentifier get namedValuesIdentifier {
+    _namedValuesIdentifier ??= NamedValuesIdentifier(provider: this);
+    return _namedValuesIdentifier!;
+  }
 
   /// Sets the functions identifier for the formula provider.
   ///
@@ -20,61 +26,22 @@ class FormulaProvider {
     }
   }
 
+  /// Sets the named values (constants, variables) identifier for the formula provider.
+  ///
+  /// If the identifier is not already present in the list of identifiers, it
+  /// will be added.
+  void setNamedValuesIdentifier(NamedValuesIdentifier namedValuesIdentifier) {
+    _namedValuesIdentifier = namedValuesIdentifier;
+    if (!identifiers.contains(_namedValuesIdentifier)) {
+      identifiers.add(_namedValuesIdentifier!);
+    }
+  }
+
   /// A list of formula term identifiers that can recognize different formula terms.
   ///
   /// Each identifier in this list is capable of recognizing and parsing a
   /// specific type of formula term, such as operators, constants, or functions.
   final List<FormulaTermIdentifier> identifiers = [];
-
-  /// Retrieves all constants stored in this provider.
-  ///
-  /// **Returns**:
-  /// - An `Iterable<Constant>` containing all the constants in the provider.
-  Iterable<Constant> get constants => _constants.values;
-
-  /// Retrieves all variables stored in this provider.
-  ///
-  /// **Returns**:
-  /// - An `Iterable<Variable>` containing all the variables in the provider.
-  Iterable<Variable> get variables => _variables.values;
-
-  /// Inserts a constant into the provider.
-  ///
-  /// **Parameters**:
-  /// - [constant]: The `Constant` to be added to the provider.
-  ///
-  /// **Returns**:
-  /// - A `String?` containing an error message if the constant's symbol is already
-  ///   used, otherwise `null` if successful.
-  String? insertConstant(Constant constant) => _insertNamedValue(constant);
-
-  /// Inserts a variable into the provider.
-  ///
-  /// **Parameters**:
-  /// - [variable]: The `Variable` to be added to the provider.
-  ///
-  /// **Returns**:
-  /// - A `String?` containing an error message if the variable's symbol is already
-  ///   used, otherwise `null` if successful.
-  String? insertVariable(Variable variable) => _insertNamedValue(variable);
-
-  /// Sets the value of a variable by its symbol.
-  ///
-  /// **Parameters**:
-  /// - [symbol]: The symbol of the variable to be updated.
-  /// - [value]: The new value to set for the variable.
-  ///
-  /// **Returns**:
-  /// - `true` if the variable was successfully updated or created, `false` otherwise.
-  bool setVariableValue(String symbol, dynamic value) {
-    String key = symbol.toLowerCase().trim();
-    if (!_variables.containsKey(key)) {
-      insertVariable(Variable(symbol: symbol, value: toFormulaValue(value)));
-    } else {
-      _variables[key]!.value = toFormulaValue(value);
-    }
-    return true;
-  }
 
   /// Registers a function for formula evaluation.
   ///
@@ -109,47 +76,37 @@ class FormulaProvider {
   /// - A preconfigured instance of `FormulaProvider`.
   static FormulaProvider get defaultInstance => _generateDefaultProvider();
 
-  // A map of named constants, where the key is the constant's symbol.
-  final Map<String, Constant> _constants = {};
-
-  // A map of named variables, where the key is the variable's symbol.
-  final Map<String, Variable> _variables = {};
-
   // Ensures that the function identifier is set.
   void _ensureFunctionsIdentifierSet() {
     if (_functionIdentifier == null) {
-      setFunctionsIdentifier(FunctionIdentifier(provider: this, functions: []));
+      setFunctionsIdentifier(FunctionIdentifier(provider: this));
     }
   }
 
-  // Private method to insert a named value (constant or variable).
-  String? _insertNamedValue(NamedValue nValue) {
-    String name = nValue.symbol.trim().toLowerCase();
-    if (_constants.containsKey(name)) {
-      return 'There already exists a constant with the name ${nValue.symbol}';
-    }
+  bool setVariableValue(String symbol, dynamic value) =>
+      namedValuesIdentifier.setVariableValue(symbol, value);
 
-    if (_variables.containsKey(name)) {
-      return 'There already exists a variable with the name ${nValue.symbol}';
-    }
+  /// Inserts a constant into the identifier.
+  ///
+  /// **Parameters**:
+  /// - [constant]: The `Constant` to be added to the provider.
+  ///
+  /// **Returns**:
+  /// - A `String?` containing an error message if the constant's symbol is already
+  ///   used, otherwise `null` if successful.
+  String? insertConstant(Constant constant) =>
+      namedValuesIdentifier.insertConstant(constant);
 
-    for (var i in identifiers) {
-      if (i is FunctionIdentifier) {
-        for (var f in i.functions) {
-          if (f.title.toLowerCase().trim() == name) {
-            return 'There already exists a function with the name ${nValue.symbol}';
-          }
-        }
-      }
-    }
-    if (nValue is Variable) {
-      _variables[name] = nValue;
-    } else if (nValue is Constant) {
-      _constants[name] = nValue;
-    }
-
-    return null;
-  }
+  /// Inserts a variable into the identifier.
+  ///
+  /// **Parameters**:
+  /// - [variable]: The `Variable` to be added to the provider.
+  ///
+  /// **Returns**:
+  /// - A `String?` containing an error message if the variable's symbol is already
+  ///   used, otherwise `null` if successful.
+  String? insertVariable(Variable variable) =>
+      namedValuesIdentifier.insertVariable(variable);
 }
 
 /// Generates a default instance of `FormulaProvider` with predefined identifiers and constants.
@@ -162,8 +119,7 @@ FormulaProvider _generateDefaultProvider() {
     NamedValuesIdentifier(provider: result),
     FunctionIdentifier(
       provider: result,
-      functions: _generateFunctionsIdenfiers(result),
-    ),
+    )..functions.addAll(_generateFunctionsIdenfiers(result)),
     OperatorsIdentifiers(),
     CommaIdentifier(),
   ]);

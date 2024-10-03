@@ -9,6 +9,8 @@ void main() {
 
   _completePossibleMissingTerms();
 
+  _dealingWithLists();
+
   _parseAndEvaluateWithCustomProvider();
 
   _changeVariableValueByFormula();
@@ -20,22 +22,31 @@ void main() {
 void _evaluateSimpleFormulas() {
   print('\nEvaluating simple formulas');
 
-  print(_parseFormulaAndEvaluate('5 + 9 / 2')); // 9.5
-  print(_parseFormulaAndEvaluate('f(555/-9)')); // 185/-3
-  print(_parseFormulaAndEvaluate('Atom.weight(\'he)')); // 4.0026
-  print(_parseFormulaAndEvaluate('Sin(π)')); // 0.0
-  print(_parseFormulaAndEvaluate('5 - (2+7i)')); // 3.0 + -7.0i
-  print(_parseFormulaAndEvaluate('Day(#2024-08-14#)')); // 14
-  print(_parseFormulaAndEvaluate('Year(Today())')); // 2024
-  print(_parseFormulaAndEvaluate(
-      'If(And(Year(Today())%4=0,Year(Today())%100<>0),"Leap year","Not leap year")')); // Leap year / Not leap year
-  print(_parseFormulaAndEvaluate('Len(ToStr(15))')); // 2
-  print(_parseFormulaAndEvaluate('Point.Y({5,-7})')); // -7
-  print(_parseFormulaAndEvaluate('Point.Y(Point(5,-2))')); // -2
-  print(_parseFormulaAndEvaluate(
-      '"Free" + " " + "Palestine"')); // "Free Palestine"
+  _parseFormulaAndEvaluate('5 + 9 / 2'); // 9.5
 
-  print(_parseFormulaAndEvaluate('Intersect(Set(2,5,9),Set(5,7,2))')); // [2, 5]
+  _parseFormulaAndEvaluate('6 ^ 3'); // 216
+
+  _parseFormulaAndEvaluate('true ^ false'); // True
+  _parseFormulaAndEvaluate('true = false'); // False
+  _parseFormulaAndEvaluate('true != false'); // True
+  _parseFormulaAndEvaluate('(5 = 2) & ( 5 > 2)'); // False
+  _parseFormulaAndEvaluate('(2.5 = 5/2) & ( 5 > 2)'); // True
+
+  _parseFormulaAndEvaluate('f(555/-9)'); // 185/-3
+  _parseFormulaAndEvaluate('Atom.weight(\'he)'); // 4.0026
+  _parseFormulaAndEvaluate('Sin(π)'); // 0.0
+  _parseFormulaAndEvaluate('5 - (2+7i)'); // 3.0 + -7.0i
+  _parseFormulaAndEvaluate('Day(#2024-08-14#)'); // 14
+  _parseFormulaAndEvaluate('WeekDay(#1990-10-10#)'); // Wednesday
+  _parseFormulaAndEvaluate('Year(Today())'); // 2024
+  _parseFormulaAndEvaluate(
+      'If(And(Year(Today())%4=0,Year(Today())%100<>0),"Leap year","Not leap year")'); // Leap year / Not leap year
+  _parseFormulaAndEvaluate('Len(ToStr(15))'); // 2
+  _parseFormulaAndEvaluate('Point.Y({5,-7})'); // -7
+  _parseFormulaAndEvaluate('Point.Y(Point(5,-2))'); // -2
+  _parseFormulaAndEvaluate('"Free" + " " + "Palestine"'); // "Free Palestine"
+
+  _parseFormulaAndEvaluate('Intersect(Set(2,5,9),Set(5,7,2))'); // [2, 5]
 }
 
 /// Parses and evaluates a given formula string using the default formula provider.
@@ -45,15 +56,10 @@ void _evaluateSimpleFormulas() {
 ///
 /// **Returns**:
 /// - The evaluated result of the formula.
-dynamic _parseFormulaAndEvaluate(String str) {
-  FormulaParser parser =
-      FormulaParser(provider: FormulaProvider.defaultInstance);
-
-  var formula = parser.parse(str);
-  var supporter = FormulaInfixToPostfixConvertor(formula: formula);
-  var result = supporter.evaluate();
-  if (result is ValueWrapper) return result.value;
-  return result;
+void _parseFormulaAndEvaluate(String str) {
+  FormulaParser parser = FormulaParser();
+  var result = (parser..parse(str)).evaluate();
+  print('$str\n  => $result');
 }
 
 /// Changes a variable's value by evaluating a formula string that sets the variable.
@@ -64,14 +70,14 @@ void _changeVariableValueByFormula() {
 
   var provider = FormulaProvider.defaultInstance;
   FormulaParser parser = FormulaParser(provider: provider);
-  String setterStr = 'SetVariable("y",5)';
+  String setterStr = 'SetVariable("y",8)';
   var setterFormula = parser.parse(setterStr);
   FormulaInfixToPostfixConvertor(formula: setterFormula).evaluate();
 
-  String formulaStr = 'power(5,2)';
+  String formulaStr = 'power(y,2)';
   var formula = parser.parse(formulaStr);
   var supporter = FormulaInfixToPostfixConvertor(formula: formula);
-  print('$formulaStr = ${supporter.evaluate()}');
+  print('$formulaStr = ${supporter.evaluate()}'); // 64
 }
 
 /// Evaluates a formula with a variable, changing the variable's value multiple times.
@@ -80,24 +86,24 @@ void _changeVariableValueByFormula() {
 /// with different variable values.
 void _evaluatingWithVariables() {
   print('\nEvaluating formula with changing variable value many times');
-  var provider = FormulaProvider.defaultInstance;
-  FormulaParser parser = FormulaParser(provider: provider);
-  provider.insertVariable(Variable(symbol: 'x', value: 0));
+  FormulaParser parser = FormulaParser();
+  parser.insertVariable(Variable(symbol: 'x', value: 0));
   String formulaStr = 'power(x,2)';
-  var formula = parser.parse(formulaStr);
-  var supporter = FormulaInfixToPostfixConvertor(formula: formula);
+  parser.parse(formulaStr);
 
   Stopwatch stopwatch = Stopwatch();
   stopwatch.start();
   int times = 1000000;
   for (int i = 0; i < times; i++) {
-    provider.setVariableValue('x', i);
-    supporter.evaluate();
+    parser.setVariableValue('x', i);
+    parser.evaluate();
   }
   stopwatch.stop();
   print(
       '$formulaStr evaluating times($times) took ${stopwatch.elapsedMilliseconds} ms');
 }
+
+FormulaParser liveParser = FormulaParser();
 
 /// Reads and evaluates a custom formula inputted by the user via the console.
 void _writeCustomFormula() {
@@ -112,14 +118,10 @@ void _writeCustomFormula() {
       cont = true;
     }
   }
-  FormulaParser parser =
-      FormulaParser(provider: FormulaProvider.defaultInstance);
 
-  var formula = parser.parse(formulaString!);
+  var formula = liveParser.parse(formulaString!);
   if (formula.errorParsingPosition == null) {
-    var supporter = FormulaInfixToPostfixConvertor(formula: formula);
-    var result = supporter.evaluate();
-    stdout.writeln('Output: $result');
+    stdout.writeln('Output: ${liveParser.evaluate()}');
   } else {
     stdout.writeln(
         'The formula has parsing error at the position: ${formula.errorParsingPosition}');
@@ -179,4 +181,19 @@ void _completePossibleMissingTerms() {
   var formula = parser.parse(formulaStr);
   var supporter = FormulaInfixToPostfixConvertor(formula: formula);
   print('${formula.toString()} = ${supporter.evaluate()}');
+}
+
+void _dealingWithLists() {
+  var parser = FormulaParser();
+  parser
+    ..parse(
+        'SetVariable("lst",List("Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"))')
+    ..evaluate();
+
+  parser.parse('ElementAt(lst,WeekDay(Today()))');
+
+  print('Today is : ${parser.evaluate()}');
+
+  parser.parse('"Tuesday order is " + (IndexOf(lst,"Tuesday") + 1)');
+  print(parser.evaluate());
 }

@@ -3,11 +3,16 @@ import '../../quds_formula_parser.dart';
 /// A parser for processing formulas using the specified `FormulaProvider`.
 /// This class is responsible for interpreting the string representation of formulas
 /// and breaking them down into their constituent terms.
-class FormulaParser {
+class FormulaParser<T extends FormulaTermsSupporter> {
   /// Creates an instance of `FormulaParser` with the provided formula provider.
-  FormulaParser({FormulaProvider? provider}) {
+  FormulaParser({
+    FormulaProvider? provider,
+  }) {
     _provider = provider;
+    internalSupporterFactory =
+        (f) => FormulaInfixToPostfixConvertor(formula: f) as T;
   }
+  late T Function(Formula formula) internalSupporterFactory;
 
   factory FormulaParser.defaultParser() =>
       FormulaParser(provider: FormulaProvider.defaultInstance);
@@ -81,9 +86,22 @@ class FormulaParser {
 
     if (!found) {
       result.errorParsingPosition =
-          position; // Set error position if no term was found
+          position; // Set error position if no term was matching
     }
 
+    _currentFormula = result.hasParsingError ? null : result;
+
+    _internalSupporter = _currentFormula == null
+        ? null
+        : internalSupporterFactory(_currentFormula!);
+
     return result; // Return the parsed formula
+  }
+
+  Formula? _currentFormula;
+  T? _internalSupporter;
+  FormulaValue evaluate() {
+    if (_currentFormula == null) return NullValue();
+    return _internalSupporter!.evaluate();
   }
 }

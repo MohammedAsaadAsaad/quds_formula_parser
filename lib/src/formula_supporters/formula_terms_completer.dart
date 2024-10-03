@@ -66,4 +66,7 @@ class FormulaTermsCompleter extends FormulaTermsSupporter {
       }
     }
   }
+
+  @override
+  evaluate() => NullValue();
 }
