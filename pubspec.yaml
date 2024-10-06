@@ -1,6 +1,6 @@
 name: quds_formula_parser
 description: Dart package designed for parsing and evaluating mathematical, logical, and textual formulas. It enables developers to input complex expressions.
-version: 0.0.5
+version: 0.0.6
 repository: https://github.com/MohammedAsaadAsaad/quds_formula_parser
 
 environment:

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:quds_formula_parser/quds_formula_parser.dart';
 
 /// A class that completes formulas by inserting implied multiplication and
@@ -17,9 +19,160 @@ class FormulaTermsCompleter extends FormulaTermsSupporter {
   @override
   FormulaSupporterResult organize() {
     List<FormulaTerm> terms = [];
-    List messages = [];
     _completeFormula();
-    return FormulaSupporterResult(terms: terms, messages: messages);
+    if (_checkTerms()) _removeRedundantBrackets();
+    return FormulaSupporterResult(terms: terms);
+  }
+
+  bool _checkTerms() {
+    FormulaErrorInTerms? result;
+    var checkers = [
+      _checkBrackets,
+      _checkOperands,
+      _checkEmptyBrackets,
+    ];
+
+    for (var c in checkers) {
+      var r = c.call();
+      if (r != null) {
+        result = r;
+        break;
+      }
+    }
+
+    if (result != null) {
+      formula.errorParsingPosition = result.position;
+      formula.errorCode = result.errorType;
+    }
+    return result == null;
+  }
+
+  void _removeRedundantBrackets() {
+    for (int i = 0; i < formula.terms.length; i++) {
+      var term = formula.terms[i];
+
+      // Look for opening brackets
+      if (term.isOpeningBracket) {
+        // Ensure the bracket is not part of a function call
+        if (i > 0 && formula.terms[i - 1].isFunction) {
+          // Skip brackets that are part of a function call (like ToStr(15))
+          continue;
+        }
+
+        // Find the matching closing bracket
+        int closingBracketIndex = _findClosingBracket(i);
+
+        // If no matching closing bracket is found, skip this bracket pair
+        if (closingBracketIndex == -1) {
+          continue; // Skip processing if brackets are unmatched
+        }
+
+        // Now, safely extract the subexpression if the closingBracketIndex is valid
+        if (closingBracketIndex > i + 1) {
+          // Ensure there is a subexpression inside
+          var subExpression = formula.terms.sublist(i + 1, closingBracketIndex);
+
+          // If the subexpression contains no operators and consists of one element
+          bool containsOperator = subExpression.any((t) => t.isOperator);
+
+          if (!containsOperator && subExpression.length == 1) {
+            // Remove the redundant opening and closing brackets
+            formula.terms
+                .removeAt(closingBracketIndex); // Remove closing bracket
+            formula.terms.removeAt(i); // Remove opening bracket
+            i -= 2; // Adjust index after removal to continue processing
+          }
+        }
+      }
+    }
+  }
+
+  /// Helper function to find the closing bracket for a given opening bracket index.
+  /// If no matching closing bracket is found, return -1.
+  int _findClosingBracket(int openingBracketIndex) {
+    int depth = 0;
+
+    // Start searching after the opening bracket
+    for (int i = openingBracketIndex; i < formula.terms.length; i++) {
+      var term = formula.terms[i];
+      if (term.isOpeningBracket) {
+        depth++;
+      } else if (term.isClosingBracket) {
+        depth--;
+        if (depth == 0) {
+          return i; // Found the matching closing bracket
+        }
+      }
+    }
+
+    return -1; // Return -1 if no matching closing bracket is found
+  }
+
+  FormulaErrorInTerms? _checkOperands() {
+    for (int i = 0; i < formula.terms.length; i++) {
+      var term = formula.terms[i];
+
+      // Check if the term is an operator
+      if (term.isOperator) {
+        // Check for missing left operand
+        if (i == 0 ||
+            formula.terms[i - 1].isOperator ||
+            formula.terms[i - 1].isLeftBracket) {
+          return FormulaErrorInTerms(
+              position: term.position!,
+              errorType: FormulaErrorCode.missingLeftOperand);
+        }
+
+        // Check for missing right operand
+        if (i == formula.terms.length - 1 ||
+            formula.terms[i + 1].isOperator ||
+            formula.terms[i + 1].isRightBracket) {
+          return FormulaErrorInTerms(
+              position: term.position!,
+              errorType: FormulaErrorCode.missingRightOperand);
+        }
+      }
+    }
+    return null;
+  }
+
+  FormulaErrorInTerms? _checkEmptyBrackets() {
+    for (int i = 0; i < formula.terms.length - 1; i++) {
+      var term = formula.terms[i];
+      if (i > 0 && formula.terms[i - 1].isFunction) continue;
+
+      if (term.isOpeningBracket && formula.terms[i + 1].isClosingBracket) {
+        return FormulaErrorInTerms(
+            position: term.position!,
+            errorType: FormulaErrorCode.emptyBrackets);
+      }
+    }
+    return null;
+  }
+
+  FormulaErrorInTerms? _checkBrackets() {
+    Queue<FormulaTerm> checker = Queue();
+
+    for (var t in formula.terms) {
+      if (t.isOpeningBracket) {
+        checker.addLast(t);
+      } else if (t.isClosingBracket) {
+        if (checker.isEmpty) {
+          return FormulaErrorInTerms(
+              position: t.position!,
+              errorType: FormulaErrorCode.missingOpeningBracket);
+        } else {
+          checker.removeLast();
+        }
+      }
+    }
+
+    if (checker.isNotEmpty) {
+      return FormulaErrorInTerms(
+          position: checker.last.position!,
+          errorType: FormulaErrorCode.missingClosingBracket);
+    }
+    return null;
   }
 
   /// Completes the formula by inserting implicit multiplication and handling
@@ -30,7 +183,9 @@ class FormulaTermsCompleter extends FormulaTermsSupporter {
   /// variable or constant and a left bracket, or between two consecutive values).
   /// It also adds a zero when there is a leading operator or when an operator
   /// follows an opening bracket.
-  void _completeFormula() async {
+  void _completeFormula() {
+    if (formula.hasParsingError) return;
+
     int size = formula.terms.length;
     for (int i = 0; i < size; i++) {
       var t1 = formula.terms[i];
@@ -69,4 +224,24 @@ class FormulaTermsCompleter extends FormulaTermsSupporter {
 
   @override
   evaluate() => NullValue();
+}
+
+class FormulaErrorInTerms {
+  final FormulaErrorCode errorType;
+  final int position;
+
+  FormulaErrorInTerms({required this.position, required this.errorType});
+}
+
+enum FormulaErrorCode {
+  undefinedTerm(1),
+  missingOpeningBracket(2),
+  missingClosingBracket(3),
+  missingLeftOperand(4),
+  missingRightOperand(5),
+  emptyBrackets(6),
+  ;
+
+  final int code;
+  const FormulaErrorCode(this.code);
 }

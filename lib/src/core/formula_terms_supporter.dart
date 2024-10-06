@@ -6,7 +6,7 @@ abstract class FormulaTermsSupporter {
 
   /// Constructs a [FormulaTermsSupporter] with the given [formula].
   FormulaTermsSupporter({required this.formula}) {
-    organize(); // Calls the organize method during construction.
+    if (!formula.hasParsingError) organize();
   }
 
   /// Organizes the terms of the formula.
@@ -14,15 +14,13 @@ abstract class FormulaTermsSupporter {
   /// Returns a [FormulaSupporterResult] containing organized terms and messages.
   FormulaSupporterResult organize();
 
-  dynamic evaluate();
+  ValueWrapper evaluate();
 }
 
 /// A result class containing the organized terms and any messages generated during the organization process.
 class FormulaSupporterResult {
   final List<FormulaTerm> terms; // The organized list of formula terms.
-  final List
-      messages; // Any messages generated during the organization process.
 
   /// Constructs a [FormulaSupporterResult] with the given terms and messages.
-  FormulaSupporterResult({required this.terms, required this.messages});
+  FormulaSupporterResult({required this.terms});
 }

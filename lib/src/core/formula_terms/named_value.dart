@@ -7,7 +7,7 @@ abstract class NamedValue extends FormulaTerm {
   final String symbol;
 
   /// The actual value associated with the named value, which is of type `FormulaValue`.
-  FormulaValue value;
+  ValueWrapper value;
 
   /// Constructs a `NamedValue` with a required `symbol` and an associated `value`.
   NamedValue({required this.symbol, required this.value});

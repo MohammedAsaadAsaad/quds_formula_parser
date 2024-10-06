@@ -4,7 +4,7 @@ import 'package:quds_formula_parser/quds_formula_parser.dart';
 ///
 /// This class extends [FormulaFunction] and serves as a base class
 /// for specific logical operations such as AND, OR, NOT, IF, and IFERROR.
-abstract class LogicalFunction extends FormulaFunction<FormulaValue> {
+abstract class LogicalFunction extends FormulaFunction<ValueWrapper> {
   LogicalFunction({required super.functionNotations});
 
   /// Generates a list of logical functions.

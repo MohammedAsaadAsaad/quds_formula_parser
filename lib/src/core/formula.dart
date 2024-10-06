@@ -8,17 +8,9 @@ class Formula {
   /// Constructs a [Formula] with the provided [parser].
   Formula({required this.parser});
 
-  /// Calculates the result of the formula.
-  ///
-  /// Returns `null` if there is a parsing error.
-  dynamic calculate() {
-    if (errorParsingPosition != null) {
-      return null; // Return null if there's a parsing error.
-    }
-    // Further calculation logic would go here.
-  }
-
   int? errorParsingPosition; // The position of an error in parsing, if any.
+  FormulaErrorCode?
+      errorCode; // The type of the error found during the parsing, if any.
 
   /// Checks if the formula has a parsing error.
   bool get hasParsingError => errorParsingPosition != null;

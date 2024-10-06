@@ -39,7 +39,7 @@ void main() {
       var supporter = FormulaInfixToPostfixConvertor(formula: formula);
       for (double x = 0; x < 1000; x++) {
         parser.provider.setVariableValue('x', x);
-        var result = (supporter.evaluate() as ValueWrapper).value;
+        var result = supporter.evaluate().value;
         expect(result, sin(x / 2));
       }
     });
@@ -54,6 +54,6 @@ dynamic _parseFormulaAndEvaluate(String str) {
   FormulaTermsCompleter(formula: formula);
   var supporter = FormulaInfixToPostfixConvertor(formula: formula);
   var result = supporter.evaluate();
-  if (result is ValueWrapper) return result.value;
+
   return result;
 }

@@ -49,7 +49,7 @@ abstract class FormulaTerm {
   ///
   /// **Returns**:
   /// - `true` if the term is a [FormulaValue], otherwise `false`.
-  bool get isValue => this is FormulaValue;
+  bool get isValue => this is ValueWrapper;
 
   /// Checks if the formula term is a variable.
   ///
@@ -105,12 +105,12 @@ abstract class FormulaTerm {
   /// - If the term is a [FormulaValue], it returns the value.
   /// - If the term is a [NamedValue], it returns the associated [FormulaValue].
   /// - Throws an exception if the term is not a valid value type.
-  FormulaValue toFormulaValueType() {
-    if (this is FormulaValue) {
-      return this as FormulaValue;
+  ValueWrapper toFormulaValueType() {
+    if (this is ValueWrapper) {
+      return this as ValueWrapper;
     }
     if (this is NamedValue) {
-      return (this as NamedValue).value;
+      return toFormulaValue((this as NamedValue).value);
     }
     throw Exception('Not a valid value type');
   }

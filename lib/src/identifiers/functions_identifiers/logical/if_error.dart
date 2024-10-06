@@ -14,7 +14,7 @@ class IfErrorFunction extends LogicalFunction {
   /// If the first parameter is not an NA value, it returns the first parameter.
   /// If the number of parameters is not exactly two, it returns an NA value.
   @override
-  FormulaValue calculate(List<ValueWrapper> parameters) {
+  ValueWrapper calculate(List<ValueWrapper> parameters) {
     // If the first parameter is not an NA value, return it.
     if (parameters.first is! NAValue) return parameters.first;
 

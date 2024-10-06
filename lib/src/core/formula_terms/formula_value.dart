@@ -1,18 +1,5 @@
 import '../../../quds_formula_parser.dart';
 
-/// An abstract class representing a value in a formula.
-/// Subclasses of this class will encapsulate different types of formula values.
-abstract class FormulaValue extends FormulaTerm {
-  /// A constant constructor for any subclass that extends `FormulaValue`.
-  FormulaValue();
-
-  /// Converts the formula value to a string representation for viewing purposes.
-  @override
-  String toString() {
-    return stringToView;
-  }
-}
-
 /// Represents an "NA" (Not Available) value in a formula.
 /// This is typically used to indicate missing or undefined data.
 class NAValue extends ValueWrapper {
@@ -46,7 +33,7 @@ class NullValue extends ValueWrapper {
 /// An abstract class that wraps a generic value of type `T` in a formula.
 /// Subclasses of this class provide wrappers for different types of values
 /// (e.g., numbers, dates, strings, etc.).
-abstract class ValueWrapper<T> extends FormulaValue {
+abstract class ValueWrapper<T> extends FormulaTerm {
   /// Constructs a `ValueWrapper` with the given value of type `T`.
   ValueWrapper(
     this.value,

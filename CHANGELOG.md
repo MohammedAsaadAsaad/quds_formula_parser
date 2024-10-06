@@ -55,3 +55,4 @@
 ## 0.0.6
 - Simplified the bodies of most of operators.
 - Defined new functions:`MemberAt`, `IndexOf`.
+- Developed the 2d plotter example.

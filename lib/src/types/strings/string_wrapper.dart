@@ -7,4 +7,7 @@ class StringWrapper extends ValueWrapper<String> {
   /// Returns the type of value wrapped, which is 'Text'.
   @override
   String get valueType => 'Text';
+
+  @override
+  String get stringToView => '"$value"';
 }

@@ -87,6 +87,7 @@ class FormulaParser<T extends FormulaTermsSupporter> {
     if (!found) {
       result.errorParsingPosition =
           position; // Set error position if no term was matching
+      result.errorCode = FormulaErrorCode.undefinedTerm;
     }
 
     _currentFormula = result.hasParsingError ? null : result;
@@ -99,8 +100,9 @@ class FormulaParser<T extends FormulaTermsSupporter> {
   }
 
   Formula? _currentFormula;
+  Formula? get formula => _currentFormula;
   T? _internalSupporter;
-  FormulaValue evaluate() {
+  ValueWrapper evaluate() {
     if (_currentFormula == null) return NullValue();
     return _internalSupporter!.evaluate();
   }

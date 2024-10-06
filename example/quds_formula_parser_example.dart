@@ -37,16 +37,29 @@ void _evaluateSimpleFormulas() {
   _parseFormulaAndEvaluate('Sin(π)'); // 0.0
   _parseFormulaAndEvaluate('5 - (2+7i)'); // 3.0 + -7.0i
   _parseFormulaAndEvaluate('Day(#2024-08-14#)'); // 14
-  _parseFormulaAndEvaluate('WeekDay(#1990-10-10#)'); // Wednesday
+  _parseFormulaAndEvaluate('WeekDay(#1990-10-10#)'); // 5 (Wednesday)
   _parseFormulaAndEvaluate('Year(Today())'); // 2024
   _parseFormulaAndEvaluate(
-      'If(And(Year(Today())%4=0,Year(Today())%100<>0),"Leap year","Not leap year")'); // Leap year / Not leap year
+      'If(And(Year(Today())%4=0,Year(Today())%100<>0),"Leap year","Not leap year")'); // "Leap year" / "Not leap year"
   _parseFormulaAndEvaluate('Len(ToStr(15))'); // 2
   _parseFormulaAndEvaluate('Point.Y({5,-7})'); // -7
   _parseFormulaAndEvaluate('Point.Y(Point(5,-2))'); // -2
   _parseFormulaAndEvaluate('"Free" + " " + "Palestine"'); // "Free Palestine"
 
   _parseFormulaAndEvaluate('Intersect(Set(2,5,9),Set(5,7,2))'); // [2, 5]
+
+  // Handling errors
+  _parseFormulaAndEvaluate('4 + w5'); // Error (undefined term)
+  _parseFormulaAndEvaluate('4 + '); // Error (missing right operand)
+  _parseFormulaAndEvaluate('4 + ()'); // Error (empty brackets)
+  _parseFormulaAndEvaluate('4 + (+)'); // Error (empty brackets)
+  _parseFormulaAndEvaluate('sin 5pi - 2'); // #N/A
+  _parseFormulaAndEvaluate(
+      'sin((5pi))'); // sin(5pi) = 0.0 (removed the redundant brackets)
+  _parseFormulaAndEvaluate('4 + * 5'); // Error (missing right operand)
+  _parseFormulaAndEvaluate('*9'); // Error (missing left operand)
+  _parseFormulaAndEvaluate('(4) + ((54)'); // Error (missing closing bracket)
+  _parseFormulaAndEvaluate('(4) + ((54)))'); // Error (missing opening bracket)
 }
 
 /// Parses and evaluates a given formula string using the default formula provider.
@@ -57,9 +70,17 @@ void _evaluateSimpleFormulas() {
 /// **Returns**:
 /// - The evaluated result of the formula.
 void _parseFormulaAndEvaluate(String str) {
+  print('\n');
   FormulaParser parser = FormulaParser();
-  var result = (parser..parse(str)).evaluate();
-  print('$str\n  => $result');
+  var formula = parser.parse(str);
+  if (formula.hasParsingError) {
+    print('''Error of parsing: $str
+Error in position: ${formula.errorParsingPosition},
+Error details: ${formula.errorCode?.name}''');
+  } else {
+    var result = (parser..parse(str)).evaluate();
+    print('$str => ${parser.formula!.formulaString}\n  => $result');
+  }
 }
 
 /// Changes a variable's value by evaluating a formula string that sets the variable.

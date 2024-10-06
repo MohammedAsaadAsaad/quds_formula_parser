@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quds_formula_parser/quds_formula_parser.dart';
-
-import 'plot_2d.dart';
+import 'plot2d_formula.dart';
 
 /// The main entry point of the application.
 void main() {
@@ -45,9 +43,6 @@ class MyHomePage extends StatefulWidget {
 
 /// The state class for [MyHomePage].
 class _MyHomePageState extends State<MyHomePage> {
-  /// The provider used to evaluate formulas.
-  late FormulaProvider provider = FormulaProvider.defaultInstance;
-
   /// Controller for handling the text input of the formula.
   TextEditingController formulaController =
       TextEditingController(text: 'x * Sin(x)');
@@ -55,29 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
   /// FocusNode for managing focus on the formula input field.
   FocusNode formulaFocus = FocusNode();
 
-  /// The parser that handles formula evaluation.
-  late FormulaParser parser = FormulaParser(provider: provider);
-
-  /// Converts infix formulas to postfix for easier evaluation.
-  FormulaInfixToPostfixConvertor? supporter;
-
-  /// The parsed formula.
-  Formula? formula;
+  String? formulaString;
 
   /// Refreshes the plot by parsing the formula and updating the UI.
   void refreshThePlot() {
     setState(() {
-      var str = formulaController.text;
-      formula = parser.parse(str);
-      supporter = FormulaInfixToPostfixConvertor(formula: formula!);
+      formulaString = formulaController.text;
     });
-  }
-
-  /// Initializes the state and sets up the default variable `x`.
-  @override
-  void initState() {
-    provider.insertVariable(Variable(symbol: 'x', value: 0));
-    super.initState();
   }
 
   /// Builds the UI of the home page.
@@ -93,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(100),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildFormula(), // Builds the formula input field
             const SizedBox(height: 5),
@@ -116,6 +96,10 @@ class _MyHomePageState extends State<MyHomePage> {
       controller: formulaController,
       focusNode: formulaFocus,
       autofocus: true,
+      onSubmitted: (v) {
+        refreshThePlot();
+        formulaFocus.requestFocus();
+      },
     );
   }
 
@@ -123,17 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
   ///
   /// The plot is updated based on the formula entered in the text field.
   Widget _buildPlot() {
-    return supporter == null
-        ? const SizedBox() // If no formula is entered, display an empty space
-        : Center(
-            child: FormulaPlot(
-              evaluator: (x) {
-                // Sets the value of 'x' and evaluates the formula
-                provider.setVariableValue('x', x);
-                var result = supporter!.evaluate().value;
-                return result;
-              },
-            ),
-          );
+    return Plot2D(
+      formulaString: formulaString ?? 'x',
+    );
   }
 }
