@@ -133,34 +133,31 @@ class FormulaPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.clipRect(Rect.fromLTRB(0, 0, size.width, size.height));
 
-    // Gradient paint for the line
-    final Gradient lineGradient = LinearGradient(
-      colors: [Colors.deepPurple, Colors.cyan],
-    );
-    final Paint linePaint = Paint()
-      ..shader = lineGradient
-          .createShader(Rect.fromLTRB(0, 0, size.width, size.height))
-      ..strokeWidth = 3.0
-      ..style = PaintingStyle.stroke;
+    // Translate the canvas to apply offset and scale
+    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
+    canvas.scale(scale);
 
+    // Draw X and Y axes
+    _drawAxes(canvas, size);
+
+    // Draw numbers on X and Y axes with ticks
+    _drawAxisNumbersWithTicks(canvas, size);
+
+    // Plot the formula
+    _plotFormula(canvas, size);
+  }
+
+  void _drawAxes(Canvas canvas, Size size) {
     final Paint axisPaint = Paint()
       ..color = Colors.grey.shade800
       ..strokeWidth = 3.0; // Make axes thicker and smoother
-
-    final Paint tickPaint = Paint()
-      ..color = Colors.grey.shade700
-      ..strokeWidth = 1.5; // Make ticks lighter
 
     // Shadow effect for the axes to make them stand out
     final Paint axisShadowPaint = Paint()
       ..color = Colors.black12
       ..strokeWidth = 6.0
       ..maskFilter =
-          MaskFilter.blur(BlurStyle.normal, 4.0); // Adding soft shadow
-
-    // Translate the canvas to apply offset and scale
-    canvas.translate(offset.dx + size.width / 2, offset.dy + size.height / 2);
-    canvas.scale(scale);
+          const MaskFilter.blur(BlurStyle.normal, 4.0); // Adding soft shadow
 
     // Draw shadow for the axes
     canvas.drawLine(Offset(-size.width * factor, 0),
@@ -168,38 +165,17 @@ class FormulaPainter extends CustomPainter {
     canvas.drawLine(Offset(0, -size.height * factor),
         Offset(0, size.height * factor), axisShadowPaint); // Y-axis shadow
 
-    // Plot the formula
-    Path path = Path();
-
-    double xWidth = size.width / factor;
-    double startX = (-size.width / 2 - offset.dx) / factor;
-    double endX = startX + xWidth;
-    startX -= 1.0;
-    endX += 1.0;
-
-    // Draw X and Y axes
     canvas.drawLine(Offset(-size.width * factor, 0),
         Offset(size.width * factor, 0), axisPaint); // X-axis
     canvas.drawLine(Offset(0, -size.height * factor),
         Offset(0, size.height * factor), axisPaint); // Y-axis
-
-    // Draw numbers on X and Y axes with ticks
-    _drawAxisNumbersWithTicks(canvas, size, tickPaint);
-
-    for (double x = startX; x <= endX; x += step) {
-      parser.setVariableValue('x', x);
-      double y = (parser.evaluate().value as num).toDouble();
-      if (x == startX) {
-        path.moveTo(x * plotScale, -y * plotScale); // Scale the plot
-      } else {
-        path.lineTo(x * plotScale, -y * plotScale); // Continue the path
-      }
-    }
-
-    canvas.drawPath(path, linePaint);
   }
 
-  void _drawAxisNumbersWithTicks(Canvas canvas, Size size, Paint tickPaint) {
+  void _drawAxisNumbersWithTicks(Canvas canvas, Size size) {
+    final Paint tickPaint = Paint()
+      ..color = Colors.grey.shade700
+      ..strokeWidth = 1.5; // Make ticks lighter
+
     final textStyle = TextStyle(
         color: Colors.grey.shade900,
         fontSize: 14.0,
@@ -243,6 +219,41 @@ class FormulaPainter extends CustomPainter {
       // Draw tick
       canvas.drawLine(Offset(-tickLength, i), Offset(tickLength, i), tickPaint);
     }
+  }
+
+  void _plotFormula(
+    Canvas canvas,
+    Size size,
+  ) {
+    // Gradient paint for the line
+    const Gradient lineGradient = LinearGradient(
+      colors: [Colors.deepPurple, Colors.cyan],
+    );
+    final Paint linePaint = Paint()
+      ..shader = lineGradient
+          .createShader(Rect.fromLTRB(0, 0, size.width, size.height))
+      ..strokeWidth = 3.0
+      ..style = PaintingStyle.stroke;
+
+    Path path = Path();
+
+    double xWidth = size.width / factor;
+    double startX = (-size.width / 2 - offset.dx) / factor;
+    double endX = startX + xWidth;
+    startX -= 1.0;
+    endX += 1.0;
+
+    for (double x = startX; x <= endX; x += step) {
+      parser.setVariableValue('x', x);
+      double y = (parser.evaluate().value as num).toDouble();
+      if (x == startX) {
+        path.moveTo(x * plotScale, -y * plotScale); // Scale the plot
+      } else {
+        path.lineTo(x * plotScale, -y * plotScale); // Continue the path
+      }
+    }
+
+    canvas.drawPath(path, linePaint);
   }
 
   @override
