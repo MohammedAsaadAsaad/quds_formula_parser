@@ -94,7 +94,7 @@ class FormulaProvider {
   /// **Returns**:
   /// - A `String?` containing an error message if the constant's symbol is already
   ///   used, otherwise `null` if successful.
-  String? insertConstant(Constant constant) =>
+  String? insertConstant(NamedValue constant) =>
       namedValuesIdentifier.insertConstant(constant);
 
   /// Inserts a variable into the identifier.
@@ -105,7 +105,7 @@ class FormulaProvider {
   /// **Returns**:
   /// - A `String?` containing an error message if the variable's symbol is already
   ///   used, otherwise `null` if successful.
-  String? insertVariable(Variable variable) =>
+  String? insertVariable(NamedValue variable) =>
       namedValuesIdentifier.insertVariable(variable);
 }
 
@@ -144,7 +144,7 @@ void _insertDefaultConstants(FormulaProvider provider) {
     'sqrt2': sqrt2,
   }.entries) {
     provider.insertConstant(
-      Constant(symbol: e.key, value: RealNumberWrapper(e.value)),
+      NamedValue(symbol: e.key, value: RealNumberWrapper(e.value)),
     );
   }
 }

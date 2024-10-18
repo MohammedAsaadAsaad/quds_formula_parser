@@ -28,17 +28,25 @@ class FormulaParser<T extends FormulaTermsSupporter> {
 
   /// Inserts a variable into the provider.
   /// Returns an error message if the variable's symbol is already used.
-  String? insertVariable(Variable variable) =>
+  String? insertVariable(NamedValue variable) =>
       provider.insertVariable(variable);
 
   /// Inserts a constant into the provider.
   /// Returns an error message if the constant's symbol is already used.
-  String? insertConstant(Constant constant) =>
+  String? insertConstant(NamedValue constant) =>
       provider.insertConstant(constant);
 
   /// Set a value of a variable
   bool setVariableValue(String symbol, [value]) =>
       provider.setVariableValue(symbol, value);
+
+  /// Set a collection of variables
+  bool setVariables(Map<String, dynamic> variables) {
+    for (var e in variables.entries) {
+      if (!setVariableValue(e.key, e.value)) return false;
+    }
+    return true;
+  }
 
   set provider(FormulaProvider provider) => _provider = provider;
 

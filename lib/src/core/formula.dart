@@ -17,9 +17,14 @@ class Formula {
 
   String get formulaString {
     StringBuffer buffer = StringBuffer();
-    for (var t in terms) {
-      buffer.write(t.stringToView);
+    for (int i = 0; i < terms.length; i++) {
+      var curr = terms[i];
+      var isOperator = curr.isOperator;
+      if (isOperator) buffer.write(' ');
+      buffer.write(curr.stringToView);
+      if (isOperator) buffer.write(' ');
     }
+
     return buffer.toString();
   }
 

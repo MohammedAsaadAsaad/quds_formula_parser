@@ -34,7 +34,7 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
       int termIndex = -1;
       for (var t in formula.terms) {
         termIndex++;
-        if (t.isFunction || t.isVariable || t.isConstant) {
+        if (t.isFunction || t.isNamedValue) {
           if (t.isFunction) {
             operators.addFirst(t);
             int argsCount = 1;
@@ -113,7 +113,7 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
         continue;
       }
 
-      if (t.isValue || t.isVariable || t.isConstant) {
+      if (t.isValue || t.isNamedValue) {
         var value = t.toFormulaValueType();
         stack.addFirst(value);
       } else if (t.isOperator) {

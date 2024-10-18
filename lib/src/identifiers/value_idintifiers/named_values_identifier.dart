@@ -14,13 +14,13 @@ class NamedValuesIdentifier extends FormulaTermIdentifier<NamedValue> {
   }
 
   // A map of named constants, where the key is the constant's symbol.
-  final Map<String, Constant> _constants = {};
+  final Map<String, NamedValue> _constants = {};
 
   // A map of named variables, where the key is the variable's symbol.
-  final Map<String, Variable> _variables = {};
+  final Map<String, NamedValue> _variables = {};
 
   // Private method to insert a named value (constant or variable).
-  String? _insertNamedValue(NamedValue nValue) {
+  String? _insertNamedValue(NamedValue nValue, bool isVariable) {
     String name = nValue.symbol.trim().toLowerCase();
     if (_constants.containsKey(name)) {
       return 'There already exists a constant with the name ${nValue.symbol}';
@@ -40,9 +40,9 @@ class NamedValuesIdentifier extends FormulaTermIdentifier<NamedValue> {
       }
     }
 
-    if (nValue is Variable) {
+    if (isVariable) {
       _variables[name] = nValue;
-    } else if (nValue is Constant) {
+    } else {
       _constants[name] = nValue;
     }
 
@@ -53,13 +53,13 @@ class NamedValuesIdentifier extends FormulaTermIdentifier<NamedValue> {
   ///
   /// **Returns**:
   /// - An `Iterable<Constant>` containing all the constants in the provider.
-  Iterable<Constant> get constants => _constants.values;
+  Iterable<NamedValue> get constants => _constants.values;
 
   /// Retrieves all variables stored in this provider.
   ///
   /// **Returns**:
   /// - An `Iterable<Variable>` containing all the variables in the provider.
-  Iterable<Variable> get variables => _variables.values;
+  Iterable<NamedValue> get variables => _variables.values;
 
   /// Inserts a constant into the identifier.
   ///
@@ -69,7 +69,8 @@ class NamedValuesIdentifier extends FormulaTermIdentifier<NamedValue> {
   /// **Returns**:
   /// - A `String?` containing an error message if the constant's symbol is already
   ///   used, otherwise `null` if successful.
-  String? insertConstant(Constant constant) => _insertNamedValue(constant);
+  String? insertConstant(NamedValue constant) =>
+      _insertNamedValue(constant, false);
 
   /// Inserts a variable into the identifier.
   ///
@@ -79,7 +80,8 @@ class NamedValuesIdentifier extends FormulaTermIdentifier<NamedValue> {
   /// **Returns**:
   /// - A `String?` containing an error message if the variable's symbol is already
   ///   used, otherwise `null` if successful.
-  String? insertVariable(Variable variable) => _insertNamedValue(variable);
+  String? insertVariable(NamedValue variable) =>
+      _insertNamedValue(variable, true);
 
   /// Sets the value of a variable by its symbol.
   ///
@@ -92,7 +94,7 @@ class NamedValuesIdentifier extends FormulaTermIdentifier<NamedValue> {
   bool setVariableValue(String symbol, dynamic value) {
     String key = symbol.toLowerCase().trim();
     if (!_variables.containsKey(key)) {
-      insertVariable(Variable(symbol: symbol, value: toFormulaValue(value)));
+      insertVariable(NamedValue(symbol: symbol, value: value));
     } else {
       _variables[key]!.value = toFormulaValue(value);
     }

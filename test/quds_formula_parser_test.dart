@@ -17,6 +17,35 @@ void main() {
       expect(_parseFormulaAndEvaluate("'h"), Atom.fromSymbol('h'));
     });
 
+    test('Simplify formulas', () {
+      expect(_parseAndSimplify('x + x'), '2 * x');
+      expect(_parseAndSimplify('x * 1'), 'x');
+      expect(_parseAndSimplify('1 * x'), 'x');
+      expect(_parseAndSimplify('x * 0'), '0');
+      expect(_parseAndSimplify('0 * x'), '0');
+      expect(_parseAndSimplify('x + x + x'), '3 * x');
+      expect(_parseAndSimplify('2 * x + 3 * x'), '5 * x');
+      expect(_parseAndSimplify('x^2 + x^2'), '2 * x ^ 2');
+      expect(_parseAndSimplify('2 * x^2 + 3 * x^2'), '5 * x ^ 2');
+      expect(_parseAndSimplify('x * x'), 'x ^ 2');
+      expect(_parseAndSimplify('x^4 + 2 * x^4'), '3 * x ^ 4');
+      expect(_parseAndSimplify('5 * x^2 - 2 * x^2'), '3 * x ^ 2');
+      expect(_parseAndSimplify('x^2 * x'), 'x ^ 3');
+      expect(_parseAndSimplify('x^2 * x^2'), 'x ^ 4');
+      expect(_parseAndSimplify('x^2 + x^3'), 'x ^ 2 + x ^ 3');
+      expect(_parseAndSimplify('x^4 - x^2'), 'x ^ 4 - x ^ 2');
+      expect(_parseAndSimplify('3 * x^2 + x^2 - 2 * x^2'), '2 * x ^ 2');
+      expect(_parseAndSimplify('4 * x - x'), '3 * x');
+      expect(_parseAndSimplify('x^3 - x^3'), '0');
+      expect(_parseAndSimplify('x^4 * x'), 'x ^ 5');
+      expect(_parseAndSimplify('Sin(x + x + x)'), 'Sin(3 * x)');
+      expect(_parseAndSimplify('2 * x + x * 2'), '4 * x');
+      expect(_parseAndSimplify('5 - 3 + 2'), '4');
+      expect(_parseAndSimplify('(2 * x)^2'), '4 * x ^ 2');
+      expect(_parseAndSimplify('Sin(2 * x + x) - Cos(3 * x)'),
+          'Sin(3 * x) - Cos(3 * x)');
+    });
+
     test('Evaluating formula output', () {
       expect(_parseFormulaAndEvaluate('9 * (7 - 5)'), 18);
       expect(_parseFormulaAndEvaluate('5 * 2-4i'), ComplexNumber(10, -20));
@@ -33,13 +62,11 @@ void main() {
     test('Setting variable with changing its value, with evaluating the output',
         () {
       FormulaParser parser = FormulaParser();
-      parser.provider.insertVariable(Variable(symbol: 'x', value: 0));
-
-      var formula = parser.parse("Sin(x/2)");
-      var supporter = FormulaInfixToPostfixConvertor(formula: formula);
+      parser.setVariables({'x': 0});
+      parser.parse("Sin(x/2)");
       for (double x = 0; x < 1000; x++) {
-        parser.provider.setVariableValue('x', x);
-        var result = supporter.evaluate().value;
+        parser.setVariables({'x': x});
+        var result = parser.evaluate().value;
         expect(result, sin(x / 2));
       }
     });
@@ -49,11 +76,14 @@ void main() {
 dynamic _parseFormulaAndEvaluate(String str) {
   FormulaParser parser =
       FormulaParser(provider: FormulaProvider.defaultInstance);
-
-  var formula = parser.parse(str);
-  FormulaTermsCompleter(formula: formula);
-  var supporter = FormulaInfixToPostfixConvertor(formula: formula);
-  var result = supporter.evaluate();
+  parser.parse(str);
+  var result = parser.evaluate().value;
 
   return result;
+}
+
+String _parseAndSimplify(String formulaString) {
+  FormulaParser parser = FormulaParser();
+  parser.setVariables({'x': 0});
+  return parser.parse(formulaString).formulaString;
 }

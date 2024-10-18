@@ -54,14 +54,8 @@ abstract class FormulaTerm {
   /// Checks if the formula term is a variable.
   ///
   /// **Returns**:
-  /// - `true` if the term is a [Variable], otherwise `false`.
-  bool get isVariable => this is Variable;
-
-  /// Checks if the formula term is a constant.
-  ///
-  /// **Returns**:
-  /// - `true` if the term is a [Constant], otherwise `false`.
-  bool get isConstant => this is Constant;
+  /// - `true` if the term is a [NamedValue], otherwise `false`.
+  bool get isNamedValue => this is NamedValue;
 
   /// Checks if the formula term is an opening bracket.
   ///

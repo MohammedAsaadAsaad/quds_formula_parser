@@ -3,6 +3,8 @@ import 'dart:io';
 
 /// The main entry point for the program, demonstrating various formula evaluation scenarios.
 void main() {
+  _simplifyFormulas();
+
   _evaluateSimpleFormulas();
 
   _evaluatingWithVariables();
@@ -16,6 +18,85 @@ void main() {
   _changeVariableValueByFormula();
 
   _writeCustomFormula();
+}
+
+void _simplifyFormulas() {
+  print('Simplifying formulas');
+  List<String> testFormulas = [
+    'x',
+    'x + x',
+    'x * 1',
+    '1 * x',
+    'x * 0',
+    '0 * x',
+    'x + x + x',
+    '2 * x + 3 * x',
+    'x^2 + x^2',
+    '2 * x^2 + 3 * x^2',
+    'x * x',
+    'x^3 + x^3',
+    'x^4 + 2 * x^4',
+    '5 * x^2 - 2 * x^2',
+    'x^2 * x',
+    'x^2 * x^2',
+    'x^2 + x^3',
+    'x^4 - x^2',
+    'x + x^2',
+    '3 * x^2 + x^2 - 2 * x^2',
+    'x + 2 * x - x',
+    '4 * x - x',
+    'x^3 - x^3',
+    'x^4 * x',
+    'x + x * 2',
+    'x^2 - x^2',
+    'x * x^2',
+    'Sin(x + x)',
+    'Sin(x + x + x)',
+    '2 * x + 2 * x',
+    '5 - 3 + 2',
+    '(2 * x)^2',
+    'x * (x + 2)',
+    '5 ^ (x + 2)',
+    'x^2 * 2 + 2 * x^2',
+    'x^2 + 2 * x^2 + 3 * x^2',
+    'x^4 - x^2 + x^4',
+    'x^5 + 2 * x^5 - x^5',
+    '2 * x^3 - x^3 + 3 * x^3',
+    'Sin(2 * x + x) - Cos(3 * x)',
+  ];
+
+  // List<String> testFormulas = [
+  //   'x ^ 4 + x ^ 4',
+  //   '4 - 1',
+  //   'x ^ (2*2)',
+  //   'x ^ (2*2) + x ^ (6 - 2)',
+  //   '5 ^ x^2 * 2',
+  //   'x - 5 ^ x^2 * 2 * 2',
+  //   '0.5*x^2 + 8*x^2',
+  //   'Sin(8*x^3 - 1.5*x^3 + 2*x^3 - x^2)',
+  //   'x - 5 * x^2 * 2',
+  //   '5 * x - 5 * x ^2 + x^2*-9 - x*-9 + x - 0 * x',
+  //   'Sin(x + x + 2*x^2 - 0.5*x^2)',
+  //   '3 * x + x',
+  //   'x + 3 * x',
+  //   'x + x + x',
+  //   '1 * x',
+  //   'x * 1',
+  //   'x + x',
+  //   'x + 1.5 * x',
+  //   'x * 1 + x',
+  //   'x + x * 4',
+  //   'Sin(x + x + x)',
+  //   'Sin(x + 2 ) - Sin(x + x + x)',
+  // ];
+  var parser = FormulaParser();
+  parser.setVariableValue('x', 0);
+  parser.setVariableValue('y', 0);
+  for (String formulaString in testFormulas) {
+    print('Before: $formulaString');
+    var result = parser.parse(formulaString);
+    print('Result: ${result.formulaString}');
+  }
 }
 
 /// Evaluates and prints simple formulas using the default formula provider.
@@ -108,7 +189,7 @@ void _changeVariableValueByFormula() {
 void _evaluatingWithVariables() {
   print('\nEvaluating formula with changing variable value many times');
   FormulaParser parser = FormulaParser();
-  parser.insertVariable(Variable(symbol: 'x', value: 0));
+  parser.insertVariable(NamedValue(symbol: 'x', value: 0));
   String formulaStr = 'power(x,2)';
   parser.parse(formulaStr);
 
