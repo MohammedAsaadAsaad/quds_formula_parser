@@ -160,6 +160,9 @@ class AtomWrapper extends ValueWrapper<Atom?> {
   /// method of the `Atom` object.
   @override
   String get stringToView => value == null ? 'NULL' : value.toString();
+
+  @override
+  String get toTexNotation => stringToView;
 }
 
 final Map<String, Atom> _atomsMap = {

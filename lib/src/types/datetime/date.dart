@@ -214,4 +214,11 @@ class DateWrapper extends ValueWrapper<Date> {
   /// Returns the type of the value as a string, which is `'Date'`.
   @override
   String get valueType => 'Date';
+
+  @override
+  String get stringToView =>
+      '#${value.year}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}#';
+
+  @override
+  String get toTexNotation => stringToView;
 }

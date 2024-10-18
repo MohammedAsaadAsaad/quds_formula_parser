@@ -13,6 +13,9 @@ class NAValue extends ValueWrapper {
   /// Returns the type of the value as `"NA"`.
   @override
   String get valueType => "NA";
+
+  @override
+  String get toTexNotation => '';
 }
 
 /// Represents a `null` value in a formula.
@@ -28,6 +31,9 @@ class NullValue extends ValueWrapper {
   /// Returns the type of the value as `"Null"`.
   @override
   String get valueType => "Null";
+
+  @override
+  String get toTexNotation => '';
 }
 
 /// An abstract class that wraps a generic value of type `T` in a formula.

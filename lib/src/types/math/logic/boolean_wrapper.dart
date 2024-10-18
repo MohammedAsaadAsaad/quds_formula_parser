@@ -12,4 +12,7 @@ class BooleanWrapper extends ValueWrapper<bool> {
   /// Returns the type of the value as `'Boolean'`.
   @override
   String get valueType => 'Boolean';
+
+  @override
+  String get toTexNotation => value ? 'True' : 'False';
 }

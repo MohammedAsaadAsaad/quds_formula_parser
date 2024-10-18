@@ -85,6 +85,9 @@ class DivisionOperator extends Operator {
   /// Returns the string representation of the operator, which is `/`.
   @override
   String get stringToView => '/';
+
+  @override
+  String get toTexNotation => '/';
 }
 
 /// A class representing the modulus (`%`) operator in a formula.
@@ -112,4 +115,7 @@ class ReminderOperator extends Operator {
   /// Returns the string representation of the operator, which is `%`.
   @override
   String get stringToView => '%';
+
+  @override
+  String get toTexNotation => '\\bmod';
 }

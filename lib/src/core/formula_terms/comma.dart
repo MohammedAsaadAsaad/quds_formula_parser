@@ -7,4 +7,7 @@ class Comma extends FormulaTerm {
   @override
   String get stringToView =>
       ','; // Returns the string representation of a comma
+
+  @override
+  String get toTexNotation => ',';
 }

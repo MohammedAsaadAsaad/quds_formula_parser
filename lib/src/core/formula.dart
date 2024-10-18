@@ -28,6 +28,16 @@ class Formula {
     return buffer.toString();
   }
 
+  String get toTex {
+    StringBuffer result = StringBuffer();
+    for (var i in terms) {
+      if (i.isOperator) result.write(' ');
+      result.write(i.toTexNotation);
+      if (i.isOperator) result.write(' ');
+    }
+    return result.toString();
+  }
+
   @override
   String toString() => formulaString.toString();
 }

@@ -18,6 +18,8 @@ abstract class FormulaTerm {
   /// Returns a string representation of the formula term for displaying purposes.
   String get stringToView;
 
+  String get toTexNotation;
+
   /// Converts the formula term to a string representation.
   ///
   /// This calls the [stringToView] getter to provide a readable representation

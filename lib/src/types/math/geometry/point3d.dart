@@ -43,4 +43,7 @@ class Point3DWrapper extends ValueWrapper<Point3D> {
   /// Returns the type of the value as `'Point3D'`.
   @override
   String get valueType => 'Point3D';
+
+  @override
+  String get toTexNotation => '(${value.x},${value.y},${value.z})';
 }

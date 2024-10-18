@@ -10,4 +10,7 @@ class StringWrapper extends ValueWrapper<String> {
 
   @override
   String get stringToView => '"$value"';
+
+  @override
+  String get toTexNotation => value;
 }

@@ -13,6 +13,14 @@ class OpeningBracket extends Bracket {
   @override
   String get stringToView =>
       '('; // Returns the string representation of an opening bracket
+
+  @override
+  String get toTexNotation => '(';
+}
+
+class FunctionOpeningBracket extends OpeningBracket {
+  @override
+  String get toTexNotation => '{';
 }
 
 /// Represents a closing bracket in a formula.
@@ -22,4 +30,12 @@ class ClosingBracket extends Bracket {
   @override
   String get stringToView =>
       ')'; // Returns the string representation of a closing bracket
+
+  @override
+  String get toTexNotation => ')';
+}
+
+class FunctionClosingBracket extends ClosingBracket {
+  @override
+  String get toTexNotation => '}';
 }

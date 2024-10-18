@@ -65,4 +65,7 @@ class Monomial extends FormulaTerm {
       coefficient.value.hashCode ^
       namedValue.symbol.hashCode ^
       exponent.value.hashCode;
+
+  @override
+  String get toTexNotation => '';
 }

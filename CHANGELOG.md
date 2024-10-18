@@ -56,3 +56,7 @@
 - Simplified the bodies of most of operators.
 - Defined new functions:`MemberAt`, `IndexOf`.
 - Developed the 2d plotter example.
+
+## 0.0.7
+- New Feature: Simplification of the formula.
+- New Feature: [Beta] Convert the formula to Tex-Notation to be visualized.

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:quds_formula_parser/quds_formula_parser.dart';
 
 class Plot2D extends StatefulWidget {
@@ -36,6 +37,8 @@ class _Plot2DState extends State<Plot2D> {
         );
       }
 
+      String tex = formula.toTex;
+
       return Stack(
         children: [
           // Background: Palestinian flag
@@ -50,6 +53,18 @@ class _Plot2DState extends State<Plot2D> {
           ),
           // Foreground: Plot
           _Plot2DPainter(parser: parser),
+          Positioned(
+            top: 5,
+            left: 5,
+            child: Container(
+                decoration: const BoxDecoration(color: Colors.black54),
+                padding: const EdgeInsets.all(5),
+                child: Math.tex(
+                  tex.replaceAll('\$', ''),
+                  mathStyle: MathStyle.display,
+                  textStyle: const TextStyle(fontSize: 20, color: Colors.white),
+                )),
+          ),
         ],
       );
     } else {

@@ -49,9 +49,12 @@ class FormulaFunctionRegister extends FormulaFunction {
       {required super.functionNotations,
       required this.calculationsMethod,
       super.manipulateOutput,
+      this.latexNotation,
       this.parametersCheckerMethod});
   final Function(Iterable parameters) calculationsMethod;
   final bool Function(Iterable parameters)? parametersCheckerMethod;
+  final String? latexNotation;
+
   @override
   calculate(List<ValueWrapper> parameters) {
     return calculationsMethod(parameters.map((e) => e.value));
@@ -63,4 +66,7 @@ class FormulaFunctionRegister extends FormulaFunction {
 
     return parametersCheckerMethod!(terms.map((e) => e.value));
   }
+
+  @override
+  String get toTexNotation => latexNotation ?? '\$${functionNotations.first}';
 }

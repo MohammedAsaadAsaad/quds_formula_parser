@@ -18,6 +18,9 @@ class NamedValue extends FormulaTerm {
   String get stringToView => symbol;
 
   bool sameNamedValue(NamedValue other) => symbol == other.symbol;
+
+  @override
+  String get toTexNotation => '\$$symbol';
 }
 
 // /// A class representing a variable in a formula.

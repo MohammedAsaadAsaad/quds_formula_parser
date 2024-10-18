@@ -37,4 +37,17 @@ class LogicalOperator extends Operator {
   /// Returns the string representation of the operator, which is the comparison symbol.
   @override
   String get stringToView => symbol;
+
+  @override
+  String get toTexNotation {
+    switch (symbol) {
+      case '&':
+      case '&&':
+        return '\\&';
+      case '|':
+      case '||':
+        return '|';
+    }
+    return '';
+  }
 }

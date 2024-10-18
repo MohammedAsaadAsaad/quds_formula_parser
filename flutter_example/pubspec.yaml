@@ -40,6 +40,7 @@ dependencies:
   fl_chart: ^0.69.0
   flutter_cube: ^0.1.1
   three_dart: ^0.0.16
+  flutter_math_fork: ^0.7.2
 
 dev_dependencies:
   flutter_test:

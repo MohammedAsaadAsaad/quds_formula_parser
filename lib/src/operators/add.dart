@@ -95,4 +95,7 @@ class AddOperator extends Operator {
   /// Returns the string representation of the operator, which is `+`.
   @override
   String get stringToView => '+';
+
+  @override
+  String get toTexNotation => '+';
 }

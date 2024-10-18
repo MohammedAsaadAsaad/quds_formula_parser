@@ -193,4 +193,8 @@ class QudsDateTimeWrapper extends ValueWrapper<QudsDateTime> {
   /// Returns the type of the value as `'DateTime'`.
   @override
   String get valueType => 'DateTime';
+
+  @override
+  String get toTexNotation =>
+      '#${value.date.year}-${value.date.month.toString().padLeft(2, '0')}-${value.date.day.toString().padLeft(2, '0')} ${value.time.hour.toString().padLeft(2, '0')}:${value.time.minute.toString().padLeft(2, '0')}:${value.time.second.toString().padLeft(2, '0')}#';
 }

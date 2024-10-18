@@ -22,4 +22,18 @@ class IterableWrapper extends ValueWrapper<Iterable> {
   @override
   String get stringToView =>
       [for (var v in value) toFormulaValue(v).stringToView].toString();
+
+  @override
+  String get toTexNotation {
+    String result = '[';
+    for (var p in value) {
+      result += '${toFormulaValue(p).toTexNotation},';
+    }
+
+    if (result.endsWith(',')) result = result.substring(result.length - 1, 1);
+
+    result += ']';
+
+    return result;
+  }
 }

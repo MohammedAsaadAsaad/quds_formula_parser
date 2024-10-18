@@ -27,4 +27,7 @@ class IfErrorFunction extends LogicalFunction {
   /// The function requires exactly two parameters.
   @override
   bool checkParameters(List<ValueWrapper> terms) => terms.length == 2;
+
+  @override
+  String get toTexNotation => '\$IfError';
 }

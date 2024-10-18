@@ -34,4 +34,7 @@ class RealNumberWrapper extends ValueWrapper<num> {
 
   RealNumberWrapper pow(num exponent) =>
       RealNumberWrapper(math.pow(exponent, exponent));
+
+  @override
+  String get toTexNotation => '$value';
 }

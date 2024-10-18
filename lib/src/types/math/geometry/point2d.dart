@@ -74,4 +74,7 @@ class Point2DWrapper extends ValueWrapper<Point2D> {
   /// Returns the type of the value as `'Point2D'`.
   @override
   String get valueType => 'Point2D';
+
+  @override
+  String get toTexNotation => '(${value.x},${value.y})';
 }

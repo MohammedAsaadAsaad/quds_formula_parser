@@ -152,4 +152,13 @@ class ComplexNumberWrapper extends ValueWrapper<ComplexNumber> {
 
   @override
   String get valueType => 'Complex';
+
+  @override
+  String get toTexNotation {
+    var re = value.realPart;
+    var im = value.imaginaryPart;
+    if (im == 0) return '$re';
+    if (re == 0) return '$im\$i';
+    return '$re+$im\$i';
+  }
 }

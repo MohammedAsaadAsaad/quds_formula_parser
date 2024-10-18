@@ -168,4 +168,8 @@ class TimeWrapper extends ValueWrapper<Time> {
   /// Returns the type of the value as `'Time'`.
   @override
   String get valueType => 'Time';
+
+  @override
+  String get toTexNotation =>
+      '#${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}:${value.second.toString().padLeft(2, '0')}#';
 }

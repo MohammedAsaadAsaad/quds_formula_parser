@@ -146,4 +146,8 @@ class FractionWrapper extends ValueWrapper<Fraction> {
 
   @override
   String get stringToView => 'f(${value.numerator}/${value.denominator})';
+
+  @override
+  String get toTexNotation =>
+      '\\frac{${value.numerator}}{${value.denominator}}';
 }

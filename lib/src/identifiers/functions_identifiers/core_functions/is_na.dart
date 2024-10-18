@@ -23,6 +23,9 @@ class IsNAFunction extends CoreFunction {
   bool checkParameters(List<ValueWrapper> terms) {
     return terms.length == 1;
   }
+
+  @override
+  String get toTexNotation => '\$IsNA';
 }
 
 /// A function that checks if a value is null.
@@ -48,4 +51,7 @@ class IsNullFunction extends CoreFunction {
   bool checkParameters(List<ValueWrapper> terms) {
     return terms.length == 1;
   }
+
+  @override
+  String get toTexNotation => '\$IsNull';
 }

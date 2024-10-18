@@ -92,4 +92,25 @@ class CompareOperator extends Operator {
   /// Returns the string representation of the operator, which is the comparison symbol.
   @override
   String get stringToView => symbol;
+
+  @override
+  String get toTexNotation {
+    switch (symbol) {
+      case '<':
+        return '<';
+      case '<=':
+        return '\\leqslant';
+      case '>':
+        return '>';
+      case '>=':
+        return '\\geq';
+      case '=':
+      case '==':
+        return '=';
+      case '<>':
+      case '!=':
+        return '\\neq';
+    }
+    return symbol;
+  }
 }

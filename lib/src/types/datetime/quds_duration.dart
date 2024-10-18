@@ -58,4 +58,7 @@ class QudsDurationWrapper extends ValueWrapper<QudsDuration> {
   /// Returns the type of the value as `'Duration'`.
   @override
   String get valueType => 'Duration';
+
+  @override
+  String get toTexNotation => '';
 }
