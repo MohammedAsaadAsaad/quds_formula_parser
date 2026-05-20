@@ -56,46 +56,41 @@ class FormulaParser<T extends FormulaTermsSupporter> {
     str = str.trim(); // Remove leading and trailing whitespace
 
     Formula result = Formula(parser: this); // Initialize the formula object
-    int position = 0; // Track the current position in the input string
+    int position = 0; // Track current position in input string
 
-    bool found = false; // Flag to indicate if a term was found
-    do {
-      var temp = str; // Store the current state of the string
-      str = temp.trimLeft(); // Remove leading whitespace
-      position += temp.length - str.length; // Update position
+    while (position < str.length) {
+      // Skip whitespace
+      while (position < str.length && str[position] == ' ') {
+        position++;
+      }
 
-      if (str.isEmpty) break; // Exit if the string is empty
+      if (position >= str.length) break; // Exit if we've consumed all input
 
-      found = false; // Reset found flag
+      // Get substring from current position for identifier matching
+      String remaining = str.substring(position);
+      bool found = false;
 
-      if (!found) {
-        // Parse values
-        for (var id in provider.identifiers) {
-          var r = id.getMatchString(str); // Attempt to match a term
-          if (r != null) {
-            var parsed = id.parse(r); // Parse the matched term
-            if (parsed != null) {
-              result.terms.add(parsed
-                ..position = position); // Add the parsed term to the formula
-              position += r.length; // Update position
-              str = str.substring(
-                  r.length, str.length); // Update the remaining string
-              found = true; // Mark that a term was found
-              break; // Exit the loop since a term was found
-            }
+      // Parse values
+      for (var id in provider.identifiers) {
+        var r = id.getMatchString(remaining); // Attempt to match a term
+        if (r != null) {
+          var parsed = id.parse(r); // Parse the matched term
+          if (parsed != null) {
+            result.terms.add(parsed
+              ..position = position); // Add the parsed term to the formula
+            position += r.length; // Update position
+            found = true; // Mark that a term was found
+            break; // Exit the loop since a term was found
           }
         }
       }
 
       if (!found) {
-        // Parse functions (implementation to be added)
+        // No matching term found
+        result.errorParsingPosition = position;
+        result.errorCode = FormulaErrorCode.undefinedTerm;
+        break;
       }
-    } while (found); // Continue parsing as long as terms are found
-
-    if (!found) {
-      result.errorParsingPosition =
-          position; // Set error position if no term was matching
-      result.errorCode = FormulaErrorCode.undefinedTerm;
     }
 
     _currentFormula = result.hasParsingError ? null : result;

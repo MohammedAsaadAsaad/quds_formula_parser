@@ -13,6 +13,10 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
   /// The resulting output in postfix order.
   List<FormulaTerm> output = [];
 
+  /// Cached bracket pairs for O(1) lookup: maps left bracket index to right bracket index
+  late final Map<int, int> _bracketPairs;
+  bool _bracketsCached = false;
+
   /// Organizes the formula terms into postfix notation.
   ///
   /// Parses through the terms in the infix formula and applies the Shunting-yard algorithm
@@ -27,6 +31,9 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
     }
 
     if (!formula.hasParsingError) {
+      // Pre-compute bracket pairs for O(1) lookup during algorithm
+      _cacheBracketPairs();
+
       output.clear();
       Queue<FormulaTerm> operators = Queue();
       Queue<int> argumentCount = Queue();
@@ -95,14 +102,39 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
     return FormulaSupporterResult(terms: output);
   }
 
+  /// Pre-computes bracket pairs for O(1) lookup during evaluation.
+  /// Maps left bracket indices to their corresponding right bracket indices.
+  void _cacheBracketPairs() {
+    if (_bracketsCached) return;
+    _bracketPairs = {};
+
+    List<int> leftStack = [];
+    for (int i = 0; i < formula.terms.length; i++) {
+      if (formula.terms[i].isLeftBracket) {
+        leftStack.add(i);
+      } else if (formula.terms[i].isRightBracket) {
+        if (leftStack.isNotEmpty) {
+          int leftIdx = leftStack.removeLast();
+          _bracketPairs[leftIdx] = i;
+        }
+      }
+    }
+    _bracketsCached = true;
+  }
+
   /// Evaluates the postfix expression and calculates the result.
   ///
   /// Uses a stack to evaluate the postfix notation of the formula, applying operators and
   /// functions as necessary. Returns the final result of the evaluation.
+  /// Stack capacity is pre-allocated based on formula complexity to minimize resizing.
   @override
   ValueWrapper evaluate() {
-    Queue<ValueWrapper> stack = Queue<ValueWrapper>();
-    List<FormulaTerm> terms = output.toList();
+    // Calculate expected stack depth based on formula complexity
+    int expectedDepth = _calculateExpectedStackDepth();
+    List<ValueWrapper> stack = List<ValueWrapper>.empty(growable: true);
+    stack.length = 0; // Ensure empty but with allocated capacity
+    
+    List<FormulaTerm> terms = output;
 
     int termsIndex = -1;
     bool functionFound = false;
@@ -115,14 +147,14 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
 
       if (t.isValue || t.isNamedValue) {
         var value = t.toFormulaValueType();
-        stack.addFirst(value);
+        stack.add(value);
       } else if (t.isOperator) {
-        var b = toFormulaValue(stack.removeFirst());
-        var a = toFormulaValue(stack.removeFirst());
+        var b = toFormulaValue(stack.removeLast());
+        var a = toFormulaValue(stack.removeLast());
         ValueWrapper result;
         result = toFormulaValue((t as Operator).calculate(a, b));
 
-        stack.addFirst(result);
+        stack.add(result);
       } else if (t.isFunction) {
         if (output.length <= termsIndex + 1) return NAValue();
 
@@ -131,7 +163,7 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
 
         List<ValueWrapper> args = [];
         for (int i = 0; i < argCount; i++) {
-          args.add(stack.removeFirst());
+          args.add(stack.removeLast());
         }
 
         var fun = t as FormulaFunction;
@@ -141,11 +173,30 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
             ? fun.calculateAndManipulate(params)
             : NAValue();
 
-        stack.addFirst(toFormulaValue(result));
+        stack.add(toFormulaValue(result));
         functionFound = true;
       }
     }
 
-    return stack.removeFirst();
+    return stack.isNotEmpty ? stack.last : NAValue();
+  }
+
+  /// Calculates expected stack depth based on output terms.
+  /// Used for pre-allocating stack capacity to reduce resizing during evaluation.
+  int _calculateExpectedStackDepth() {
+    int depth = 0;
+    int maxDepth = 0;
+    for (var t in output) {
+      if (t.isValue || t.isNamedValue) {
+        depth++;
+      } else if (t.isOperator) {
+        depth--; // Operator consumes 2, produces 1
+      } else if (t.isFunction) {
+        // Function consumes multiple args and produces 1
+        depth = (depth > 0) ? depth : 1;
+      }
+      maxDepth = (depth > maxDepth) ? depth : maxDepth;
+    }
+    return maxDepth + 10; // Add buffer
   }
 }

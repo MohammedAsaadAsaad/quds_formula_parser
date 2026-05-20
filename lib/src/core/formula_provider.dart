@@ -61,12 +61,15 @@ class FormulaProvider {
   }) {
     _ensureFunctionsIdentifierSet();
     var functionsIdentifier = _functionIdentifier!;
-    functionsIdentifier.functions.add(FormulaFunctionRegister(
+    var newFunction = FormulaFunctionRegister(
       functionNotations: notations,
       calculationsMethod: evaluator,
       manipulateOutput: manipulateResult,
       parametersCheckerMethod: checkParameters,
-    ));
+    );
+    functionsIdentifier.functions.add(newFunction);
+    // Optimize: Update the HashMap for O(1) lookup
+    functionsIdentifier.addFunctionToMap(newFunction);
     return true;
   }
 

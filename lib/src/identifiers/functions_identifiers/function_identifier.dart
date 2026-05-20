@@ -19,6 +19,9 @@ class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
   /// A list of available functions to identify from.
   final List<FormulaFunction> functions = [];
 
+  /// HashMap for O(1) function lookup by notation (lowercase).
+  final Map<String, FormulaFunction> _notationMap = {};
+
   /// The [FormulaProvider] that stores the functions.
   final FormulaProvider provider;
 
@@ -31,11 +34,18 @@ class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
     provider.setFunctionsIdentifier(this);
   }
 
+  /// Adds a function and updates the notation map for O(1) lookup.
+  void addFunctionToMap(FormulaFunction function) {
+    for (var notation in function.functionNotations) {
+      _notationMap[notation.toLowerCase()] = function;
+    }
+  }
+
   /// Parses the input string to match it with a function's notation.
   ///
-  /// Takes a string [str], converts it to lowercase, and compares it with the
-  /// notations of the available functions. If a match is found, the corresponding
-  /// [FormulaFunction] is returned. If no match is found, it returns `null`.
+  /// Uses HashMap-based O(1) lookup instead of O(n*m) nested loop.
+  /// If a function is added via [functions] list after initialization,
+  /// the map is built lazily on first parse.
   ///
   /// **Parameters**:
   /// - [str]: The input string representing the function name.
@@ -44,14 +54,14 @@ class FunctionIdentifier extends FormulaTermIdentifier<FormulaFunction> {
   /// - The matching [FormulaFunction], or `null` if no match is found.
   @override
   FormulaFunction? parse(String str) {
-    var s = str.toLowerCase();
-
-    for (var f in functions) {
-      for (var n in f.functionNotations) {
-        if (n.toLowerCase() == s) return f;
+    // Build map lazily if functions were added directly to the list
+    if (_notationMap.isEmpty && functions.isNotEmpty) {
+      for (var f in functions) {
+        addFunctionToMap(f);
       }
     }
-    return null;
+
+    return _notationMap[str.toLowerCase()];
   }
 
   /// Returns the regular expression pattern used to identify function names.
