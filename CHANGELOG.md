@@ -69,3 +69,6 @@
 ## 0.0.7
 - New Feature: Simplification of the formula.
 - New Feature: [Beta] Convert the formula to Tex-Notation to be visualized.
+
+## 0.0.8
+- Enhanced the performance

@@ -8,7 +8,7 @@ class FormulaParser<T extends FormulaTermsSupporter> {
   FormulaParser({
     FormulaProvider? provider,
   }) {
-    _provider = provider;
+    _provider = provider ?? FormulaProvider.defaultInstance;
     internalSupporterFactory =
         (f) => FormulaInfixToPostfixConvertor(formula: f) as T;
   }
@@ -53,6 +53,9 @@ class FormulaParser<T extends FormulaTermsSupporter> {
   /// Parses a formula represented as a string and returns a `Formula` object.
   /// This method processes the string and identifies terms, values, and functions.
   Formula parse(String str) {
+    if (formula != null && formula!.formulaString.trim() == str) {
+      return formula!;
+    }
     str = str.trim(); // Remove leading and trailing whitespace
 
     Formula result = Formula(parser: this); // Initialize the formula object

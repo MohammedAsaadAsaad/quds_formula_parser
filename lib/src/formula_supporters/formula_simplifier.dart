@@ -19,7 +19,8 @@ class FormulaSimplifier extends FormulaTermsSupporter {
       _combineLikeMonomialsAddition,
       _combineLikeMonomialsMultiplication,
       _performMonomialWithRealNumberMultiplications,
-      _performMonomialWithRealNumberAddition,
+      _performRealNumbersMultiplication,
+      _performRealNumbersAddition,
       _performRealNumberMultiplications, _performMonomialPower,
       // _distributeMultiplicationTest,
       // _distributeExponentiationTest,
@@ -218,7 +219,34 @@ class FormulaSimplifier extends FormulaTermsSupporter {
     return simplified;
   }
 
-  bool _performMonomialWithRealNumberAddition(List<FormulaTerm> terms) {
+  bool _performRealNumbersMultiplication(List<FormulaTerm> terms) {
+    bool simplified = false;
+    for (int i = 0; i < terms.length; i++) {
+      if (_areCombinableNumbersMultiplication(
+          [RealNumberWrapper, MultiplyOperator, RealNumberWrapper], terms, i)) {
+        var left = (terms[i] as RealNumberWrapper).value;
+        var right = (terms[i + 2] as RealNumberWrapper).value;
+        terms.removeRange(i, i + 3);
+        terms.insert(i, RealNumberWrapper(left * right));
+        simplified = true;
+      } else if (_areCombinableNumbersMultiplication(
+          [RealNumberWrapper, MultiplyOperator, Monomial], terms, i)) {
+        var m = terms[i + 2] as Monomial;
+        var number = terms[i] as RealNumberWrapper;
+        terms.removeRange(i, i + 3);
+        terms.insert(
+            i,
+            Monomial(
+                coefficient: m.coefficient * number,
+                namedValue: m.namedValue,
+                exponent: m.exponent));
+        simplified = true;
+      }
+    }
+    return simplified;
+  }
+
+  bool _performRealNumbersAddition(List<FormulaTerm> terms) {
     bool simplified = false;
     for (int i = 0; i < terms.length; i++) {
       if (_areCombinableNumbersAddition(
