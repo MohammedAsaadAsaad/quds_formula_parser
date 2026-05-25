@@ -9,7 +9,7 @@ void main() {
 void _simpleTests() {
   group('Parsing and evaluation', () {
     test('Parsing values', () {
-      expect(_parseFormulaAndEvaluate('"Mohammed Asaad"'), "Mohammed Asaad");
+      expect(_parseFormulaAndEvaluate('"Moha  mmed Asaad"'), "Mohammed Asaad");
       expect(_parseFormulaAndEvaluate('true'), true);
       expect(_parseFormulaAndEvaluate('false'), false);
       expect(_parseFormulaAndEvaluate('2.467e2'), 246.7);

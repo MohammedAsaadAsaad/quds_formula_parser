@@ -130,10 +130,10 @@ class FormulaInfixToPostfixConvertor extends FormulaTermsSupporter {
   @override
   ValueWrapper evaluate() {
     // Calculate expected stack depth based on formula complexity
-    int expectedDepth = _calculateExpectedStackDepth();
+    _calculateExpectedStackDepth();
     List<ValueWrapper> stack = List<ValueWrapper>.empty(growable: true);
     stack.length = 0; // Ensure empty but with allocated capacity
-    
+
     List<FormulaTerm> terms = output;
 
     int termsIndex = -1;

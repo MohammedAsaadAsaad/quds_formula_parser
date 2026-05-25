@@ -8,7 +8,7 @@ class AtomIdentifier extends ValueIdentifier<AtomWrapper> {
   /// Parses the input string to identify and extract an atom.
   ///
   /// The string is expected to be enclosed in single quotes and represent an atomic symbol
-  /// (e.g., `'H'` for Hydrogen, `'O'` for Oxygen). If the symbol corresponds to a valid atom,
+  /// (e.g., `'H` for Hydrogen, `'O` for Oxygen). If the symbol corresponds to a valid atom,
   /// it returns an [AtomWrapper] containing the [Atom]. Otherwise, it returns `null`.
   @override
   AtomWrapper? parse(String str) {

@@ -70,5 +70,9 @@
 - New Feature: Simplification of the formula.
 - New Feature: [Beta] Convert the formula to Tex-Notation to be visualized.
 
-## 0.0.8
+## 0.0.9
 - Enhanced the performance
+
+
+## 0.0.10
+- Updated the README.md file
